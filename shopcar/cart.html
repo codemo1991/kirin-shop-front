@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>品牌联盟</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<link rel="stylesheet" href="../css/style.css" />
+		
+	</head>
+	<style type="text/css">
+		.classfy-item__body{
+			min-height: 100px;height:auto;
+		}
+		.mui-media-title{
+			font-size: 14px;line-height:20px;padding-right: 0px;word-break:normal; width:auto; display:block; white-space:pre-wrap;word-wrap : break-word ;overflow: hidden ;
+		}
+		.mui-media-decr{
+			font-size: 13px;
+		}
+		.price-origin{
+			color: #757575;font-size: 12px;margin-right: 10px;
+		}
+		.pcs-num{
+			color: #757575;font-size: 13px;
+		}
+		.mui-numbox{
+			width: 100px;height: 26px !important;border: solid 1px #E4E4E4 !important;padding:0px !important;margin-left:0px;
+			}
+		.mui-popup-button {  
+			font-size: 13px;  
+			line-height: 36px;  
+			height: 36px;  
+		} 
+		.mui-popup {
+			margin: 10px;
+			top: 45%;  
+			left: 50%;  
+			width: 250px;  
+		} 
+		.mui-popup-inner {  
+			position: relative;  
+			padding: 10px;  
+			border-radius: 13px 13px 0 0;  
+			background: rgba(255,255,255,.95)  
+		}  
+		.mui-popup-title {  
+			font-size: 14px;  
+		}  
+		.mui-bar-cartsum .mui-btn-danger {
+            padding: 6px 12px !important;
+		}
+	</style>
+
+	<body id="app" style="margin: 0;">
+		<header class="mui-bar mui-bar-nav bg-red noShadow" style="padding-right: 0px;position: fixed;">
+			<a class="mui-pull-left text-white"></a>
+			<h1 class="mui-title text-white">购物车</h1>
+			<span class="mui-pull-right btn-option btn-edit" style="font-size: 15px;height: 100%;padding: 13px;">编辑</span>
+		</header>
+		<div class="notice-wrapper" v-if="isLogin==true && user.CustomerType!=6" style="position: fixed;margin-top: 10px;z-index: 100;width: 100%;">
+			<div class="notice flexbox">
+				<span class="icon-notice"></span>
+				<marquee class="notice-text">
+					<span>好消息！下订单只要使用微信和支付宝支付货款，订单经确认并全部发货后，可获得金额计奖励金{{user.RewardAmountRate*100}}%。</span>
+				</marquee>
+			</div>
+		</div>
+		<div class="mui-content" style="margin-top: 30px;">
+			<div class="mui-row" style="margin-bottom: .15rem;">
+				<div class="mui-content">
+				    <ul class="mui-table-view">
+				        <li class="mui-table-view-cell">
+				            <a class="mui-navigate-right" href="list1.html">
+				               <p>段涂涂 <label class="mui-pull-right" style="padding-right: 20px;">13714227829</label></p>
+				               <p>吉林市 朝鲜族自治州  珲春市</p>
+				               <p>大学生公寓10号河边的</p>
+				            </a> 
+				        </li>
+				    </ul>
+				</div>
+			</div>
+			<div class="goods">
+				<!-- 普通商品 -->
+				<div class="block-group">
+					<ul class="mui-table-view">
+						<li class="li_normal mui-table-view-cell mui-media" v-for="(index,Goods) in GoodsList">
+							<div class="mui-checkbox mui-pull-left">
+								<input class="checkbox" name="checkbox" type="checkbox" checked :value="Goods" v-model="check_goods">
+							</div>
+							<div class="classfy-item__img flexbox">
+								<img class="mui-media-object mui-pull-left" src="../img/201810240219510524.jpg">
+							</div>
+							<div class="mui-media-body classfy-item__body">
+								<h2 class="mui-media-title">小神童书包</h2>
+								<p class="mui-media-decr">
+									型号: 120g
+									<span class="mui-pull-right">大小合适 刚刚好</span>
+								</p>
+								<div style="margin-top: 10px;">
+									<span class="price-now">￥100元 </span>
+									<div  class="mui-pull-right">
+										<div class="mui-numbox" data-numbox-min='1'>
+											<button class="mui-btn mui-btn-numbox-minus" type="button">-</button>
+											<input class="mui-input-numbox" type="number" @tap="tapNum(Goods)" readonly="readonly" v-on:input="watchNum(Goods)" v-model="Goods.MinPCSAmount"/> 
+											<button class="mui-btn mui-btn-numbox-plus"  type="button">+</button>
+										</div>
+										件
+									</div>
+								</div>
+							</div>
+						</li>
+					</ul>
+				</div>
+				<div class="block-group">
+					<ul class="mui-table-view">
+						<li class="li_normal mui-table-view-cell mui-media" v-for="(index,Goods) in GoodsList">
+							<div class="mui-checkbox mui-pull-left">
+								<input class="checkbox" name="checkbox" type="checkbox" checked :value="Goods" v-model="check_goods">
+							</div>
+							<div class="classfy-item__img flexbox">
+								<img class="mui-media-object mui-pull-left" src="../img/201810240219510524.jpg">
+							</div>
+							<div class="mui-media-body classfy-item__body">
+								<h2 class="mui-media-title">小神童书包</h2>
+								<p class="mui-media-decr">
+									型号: 120g
+									<span class="mui-pull-right">大小合适 刚刚好</span>
+								</p>
+								<div style="margin-top: 10px;">
+									<span class="price-now">￥100元 </span>
+									<div  class="mui-pull-right">
+										<div class="mui-numbox" data-numbox-min='1'>
+											<button class="mui-btn mui-btn-numbox-minus" type="button">-</button>
+											<input class="mui-input-numbox" type="number" @tap="tapNum(Goods)" readonly="readonly" v-on:input="watchNum(Goods)" v-model="Goods.MinPCSAmount"/> 
+											<button class="mui-btn mui-btn-numbox-plus"  type="button">+</button>
+										</div>
+										件
+									</div>
+								</div>
+							</div>
+						</li>
+					</ul>
+				</div>
+				
+				<div class="block-group">
+					<ul class="mui-table-view">
+						<li class="li_normal mui-table-view-cell mui-media" v-for="(index,Goods) in GoodsList">
+							<div class="mui-checkbox mui-pull-left">
+								<input class="checkbox" name="checkbox" type="checkbox" checked :value="Goods" v-model="check_goods">
+							</div>
+							<div class="classfy-item__img flexbox">
+								<img class="mui-media-object mui-pull-left" src="../img/201810240219510524.jpg">
+							</div>
+							<div class="mui-media-body classfy-item__body">
+								<h2 class="mui-media-title">小神童书包</h2>
+								<p class="mui-media-decr">
+									型号: 120g
+									<span class="mui-pull-right">大小合适 刚刚好</span>
+								</p>
+								<div style="margin-top: 10px;">
+									<span class="price-now">￥100元 </span>
+									<div  class="mui-pull-right">
+										<div class="mui-numbox" data-numbox-min='1'>
+											<button class="mui-btn mui-btn-numbox-minus" type="button">-</button>
+											<input class="mui-input-numbox" type="number" @tap="tapNum(Goods)" readonly="readonly" v-on:input="watchNum(Goods)" v-model="Goods.MinPCSAmount"/> 
+											<button class="mui-btn mui-btn-numbox-plus"  type="button">+</button>
+										</div>
+										件
+									</div>
+								</div>
+							</div>
+						</li>
+					</ul>
+				</div>
+				
+				<div class="block-group">
+					<ul class="mui-table-view">
+						<li class="li_normal mui-table-view-cell mui-media" v-for="(index,Goods) in GoodsList">
+							<div class="mui-checkbox mui-pull-left">
+								<input class="checkbox" name="checkbox" type="checkbox" checked :value="Goods" v-model="check_goods">
+							</div>
+							<div class="classfy-item__img flexbox">
+								<img class="mui-media-object mui-pull-left" src="../img/201810240219510524.jpg">
+							</div>
+							<div class="mui-media-body classfy-item__body">
+								<h2 class="mui-media-title">小神童书包</h2>
+								<p class="mui-media-decr">
+									型号: 120g
+									<span class="mui-pull-right">大小合适 刚刚好</span>
+								</p>
+								<div style="margin-top: 10px;">
+									<span class="price-now">￥100元 </span>
+									<div  class="mui-pull-right">
+										<div class="mui-numbox" data-numbox-min='1'>
+											<button class="mui-btn mui-btn-numbox-minus" type="button">-</button>
+											<input class="mui-input-numbox" type="number" @tap="tapNum(Goods)" readonly="readonly" v-on:input="watchNum(Goods)" v-model="Goods.MinPCSAmount"/> 
+											<button class="mui-btn mui-btn-numbox-plus"  type="button">+</button>
+										</div>
+										件
+									</div>
+								</div>
+							</div>
+						</li>
+					</ul>
+				</div>
+				
+			</div>	
+		</div>	
+		<div class="mui-bar mui-bar-tab noShadow mui-bar-cartsum" style="bottom: 0;">
+			<div class="bar-tab-sum" style="background-color: #FAFAFA;">
+				<div class="mui-checkbox mui-pull-left">
+					<label>
+						<input class="checkAll" name="checkAll" type="checkbox" @click="check_all" :disabled="allCount <= 0" :checked="total_num == allCount && allCount!=0">
+						<p>全选</p>
+					</label>
+				</div>
+				<div class="cartsum__body">
+					合计：<strong class="text-red"><span style="font-size: 14px;">￥</span>
+						120
+					</strong>
+					<button class="mui-btn-danger mui-pull-right" style="padding-top: 8px;" opacity: 0.8;>删除 </button>
+					<button class="mui-btn-danger mui-pull-right" style="padding-top: 8px;margin-right:8px;" opacity: 0.8;>确认下单 </button>
+				</div>
+			</div>
+		</div>
+	</body>
+
+</html>

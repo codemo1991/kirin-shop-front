@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>蜡笔联盟下单系统</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+		<!--标准mui.css-->
+		<link rel="stylesheet" href="css/mui.min.css">
+		<link rel="stylesheet" href="css/order.css" />
+	</head>
+
+	<body>
+		
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">蜡笔联盟下单系统</h1>
+		</header>
+		
+		<div class="mui-content" style="padding-bottom: 50px;">
+			<div class="mui-row">
+				<div class="mui-content">
+				    <ul class="mui-table-view">
+				        <li class="mui-table-view-cell">
+				            <a class="mui-navigate-right" href="list1.html">
+				               <p>段涂涂 <label class="mui-pull-right" style="padding-right: 20px;">13714227829</label></p>
+				               <p>吉林市 朝鲜族自治州  珲春市</p>
+				               <p>大学生公寓10号河边的</p>
+				            </a> 
+				        </li>
+				    </ul>
+				</div>
+			</div>
+			
+			<HR style="FILTER: progid:DXImageTransform.Microsoft.Glow(color=#987cb9,strength=1)" width="90%" color=#987cb9 SIZE=0.5>
+			
+			<div class="mui-row" style="padding-bottom: 50px;">
+				<div class="mui-col-xs-3">
+					<div id="tab-item" class="mui-segmented-control mui-segmented-control-inverted mui-segmented-control-vertical"></div>
+				</div>
+				
+				<div id="tab-content" class="mui-col-xs-9" style="border-left: 1px solid #c8c7cc;"></div>	
+			</div>
+		</div>
+		
+		<div class="xq-bar-tab xq-bar-clc">
+			<div>
+				<button type="button" class="mui-btn mui-btn-danger">清空</button>
+			</div>
+			<div class="xq-bar-tab-item ">
+				<span class="xq-bar-span">合计：</span>
+				<span class="xq-submit-bar-price">
+					¥
+					<span class="xq-submit-bar-price xq-submit-bar-integer" id="total_price" value="0">0</span>
+					.00
+				</span>
+			</div>
+			<div>
+				<button type="button" class="mui-btn mui-btn-blue" id='payBtn'>
+					查看
+				</button>
+			</div>
+		</div>
+		
+		<nav class="mui-bar mui-bar-tab">
+			<a class="mui-tab-item mui-active" href="home.html">
+				<span class="mui-icon mui-icon-home"></span>
+				<span class="mui-tab-label">首页</span>
+			</a>
+			<a class="mui-tab-item" href="message.html">
+				<span class="mui-icon mui-icon-phone"></span>
+				<span class="mui-tab-label">下单中心</span>
+			</a>
+			<a class="mui-tab-item" href="setting.html">
+				<span class="mui-icon mui-icon-email"></span>
+				<span class="mui-tab-label">订单中心</span>
+			</a>
+			<a class="mui-tab-item" href="setting.html">
+				<span class="mui-icon mui-icon-contact"></span>
+				<span class="mui-tab-label">我的</span>
+			</a>
+		</nav>
+		
+		<script src="js/mui.js"></script>
+		<!--上拉加载依赖组件-->
+		<script src="js/mui.pullToRefresh.js"></script>
+		<script src="js/common.js"></script>
+		<script src="js/goodOb.js"></script>
+		<script src="js/order.js"></script>
+		<script>
+			mui.init({
+				swipeBack: true ,//启用右滑关闭功能
+			});
+			//阻尼系数
+			var deceleration = mui.os.ios?0.003:0.0009;
+			mui('.mui-scroll-wrapper').scroll({
+				bounce: false,
+				indicators: true, //是否显示滚动条
+				deceleration:deceleration
+			});
+			
+		</script>
+	</body>
+</html>

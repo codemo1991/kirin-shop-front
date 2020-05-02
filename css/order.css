@@ -1,0 +1,145 @@
+.mui-row.mui-fullscreen>[class*="mui-col-"] {
+	height: 100%;
+}
+.mui-col-xs-3,
+.mui-control-content {
+	overflow-y: auto;
+	height: 100%;
+}
+.mui-segmented-control .mui-control-item {
+	line-height: 50px;
+	width: 100%;
+}
+.mui-segmented-control.mui-segmented-control-inverted .mui-control-item.mui-active {
+	background-color: #fff;
+}
+
+/*上拉加载样式*/
+.mui-pull-bottom-tips {
+	text-align: center;
+	background-color: #efeff4;
+	font-size: 15px;
+	line-height: 40px;
+	color: #777;
+}
+
+.xq-bar-tab {
+	position: fixed;
+	top: auto;
+	table-layout: fixed;
+	background-color: #FFFFFF;
+	color: #757575;
+	right: 0;
+	left: 0;
+	z-index: 10;
+	width: 100%;
+	min-height: 2.25rem;
+	font-size: 0.9rem;
+	text-align: center;
+	display: table;
+}
+
+.xq-bar-tab .xq-bar-tab-item {
+	display: table-cell;
+	position: relative;
+	height: 2.5rem;
+	text-align: center;
+	vertical-align: middle;
+	width: 60%;
+}
+
+.xq-bar-clc {
+	bottom: 51px;
+	background-color: #c6c6ca !important;
+	opacity: 0.9;
+}
+
+.xq-submit-bar-price {
+	color: #ee0a24;
+	font-weight: 500;
+	font-size: 12px;
+}
+
+.xq-submit-bar-integer {
+	font-size: 20px;
+	font-family: Avenir-Heavy, PingFang SC, Helvetica Neue, Arial, sans-serif;
+}
+
+.xq-bar-tab2 {
+	top: auto;
+	table-layout: fixed;
+	background-color: #FFFFFF;
+	color: #757575;
+	right: 0;
+	left: 0;
+	z-index: 10;
+	width: 100%;
+	min-height: 2.25rem;
+	font-size: 0.9rem;
+	text-align: center;
+	display: table;
+	background-color: #c6c6ca !important;
+	opacity: 0.9;
+}
+
+.xq-div-table {
+	font-size: 14px;
+	padding-left: 30px;
+	display: inline-block;
+	float: left;
+	color: #79797c;
+	font-family: "comic sans ms";
+	width: 74%;
+	text-align: start;
+}
+
+.xq-div-table2 {
+	font-size: 14px;
+	display: inline-block;
+	float: left;
+	color: #79797c;
+	font-family: "comic sans ms";
+	width: 26%;
+}
+
+.xq-bar-tab2 {
+	top: auto;
+	table-layout: fixed;
+	background-color: #FFFFFF;
+	color: #757575;
+	right: 0;
+	left: 0;
+	z-index: 10;
+	width: 100%;
+	min-height: 2.25rem;
+	font-size: 0.9rem;
+	text-align: center;
+	display: table;
+	background-color: #c6c6ca !important;
+	opacity: 0.9;
+}
+
+.xq-bar-tab {
+	position: fixed;
+	top: auto;
+	table-layout: fixed;
+	background-color: #FFFFFF;
+	color: #757575;
+	right: 0;
+	left: 0;
+	z-index: 10;
+	width: 100%;
+	min-height: 2.25rem;
+	font-size: 0.9rem;
+	text-align: center;
+	display: table;
+}
+
+.xq-bar-tab .xq-bar-tab-item {
+	display: table-cell;
+	position: relative;
+	height: 2.5rem;
+	text-align: center;
+	vertical-align: middle;
+	width: 60%;
+}
