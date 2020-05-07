@@ -1,12 +1,15 @@
 // 服务器状态
-var global_code_success = '0000';
-var global_code_fail = '9999';
+var global_code_success = '0';
+var global_code_fail = '1';
+var global_need_login = '3';
 
 //消息类
 var global_request_error = '请求服务异常，请稍后重试';
 
 //服务器地址
-var global_base_url = "http://localhost:8080";
+var global_base_url = "http://localhost:8081";
+var global_index_url = global_base_url + "/main/indexBaseInfo";
+var global_login_url = global_base_url + "/login/userLogin";
 var global_good_url = global_base_url + "/good/list";
 var global_address_url = global_base_url +'/address';
 var global_order_list_url = global_base_url + '/order/list';

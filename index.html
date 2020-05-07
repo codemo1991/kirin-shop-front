@@ -4,11 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
     <title></title>
-    <script src="js/mui.min.js"></script>
-    <link href="css/mui.min.css" rel="stylesheet"/>
-    <script type="text/javascript" charset="utf-8">
-      	mui.init();
-    </script>
+	<link href="css/mui.min.css" rel="stylesheet"/>
 	<link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
@@ -31,43 +27,10 @@
 	
 	<div class="mui-content"style="padding-bottom: 0px;">
 		<div class="banner">
-			<div id="slider" class="mui-slider mgauto" >
-				<div class="mui-slider-group mui-slider-loop">
-					<!-- 额外增加的一个节点(循环轮播：第一个节点是最后一张轮播) -->
-					<div class="mui-slider-item mui-slider-item-duplicate">
-						<a href="#">
-							<img style="width: 100%;" src="img/banner3.png">
-						</a>
-					</div>
-					<!-- 第一张 -->
-					<div class="mui-slider-item">
-						<a href="#">
-							<img style="width: 100%;" src="img/banner1.png">
-						</a>
-					</div>
-					<!-- 第二张 -->
-					<div class="mui-slider-item">
-						<a href="#">
-							<img style="width: 100%;" src="img/banner2.png">
-						</a>
-					</div>
-					<!-- 第三张 -->
-					<div class="mui-slider-item">
-						<a @tap="toRewardInfo()">
-							<img style="width: 100%;" src="img/banner3.png">
-						</a>
-					</div>
-					<!-- 额外增加的一个节点(循环轮播：最后一个节点是第一张轮播) -->
-					<div class="mui-slider-item mui-slider-item-duplicate">
-						<a href="#">
-							<img style="width: 100%;" src="img/banner1.png">
-						</a>
-					</div>
+			<div id="slider" class="mui-slider" >
+				<div class="mui-slider-group mui-slider-loop" id="slider_img">
 				</div>
-				<div class="mui-slider-indicator">
-					<div class="mui-indicator mui-active"></div>
-					<div class="mui-indicator"></div>
-					<div class="mui-indicator"></div>
+				<div class="mui-slider-indicator"  id="slider_indicator">
 				</div>
 			</div>
 			<div class="banner-bg"></div>
@@ -76,12 +39,8 @@
 		<div class="notice-wrapper">
 			<div class="notice flexbox">
 				<span class="icon-notice"><img src="img/icon-notice.png"/></span>
-				<marquee class="notice-text">
-					<template v-if="NoticeList && NoticeList.length>0" v-for="Notice in NoticeList">
-						<span style="color: #e60012">【{{Notice.LogoContent}}】</span>
-						<span>{{Notice.NoticeContent}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-					</template>
-					<span v-if="!NoticeList || NoticeList.length==0"><span style="color: #e60012">【恭喜】</span>蜡笔品牌联盟已上线，正式走上文具联盟时代，让商家直接与厂家交易，减少中间商环节。</span>
+				<marquee class="notice-text" id="notice-content">
+					
 				</marquee>
 			</div>
 		</div>
@@ -120,153 +79,14 @@
 			</a>
 		</div>
 		
-		<div class="cart-product" v-for="(index,item) in homeList">
+		<div class="cart-product">
 			<a class="cart-product__header">
 				<span class="bar bar-red"></span>
 				<span class="text" style="padding-top: 2px;">爆款推荐</span>
 			</a>
 			
-			<div class="cart-product__body">
-				<div class="goods-row col-3">
-					<a class="goods-item__link">
-						<div class="goods-item__img" style="background-color: #FFFFFF;">
-							<img style="height: 100%;" src="img/201810240219510524.jpg">
-						</div>
-						<div class="goods-item__descr">
-							蓝月亮薰衣草洗衣液200ml十袋
-						</div>
-						<div class="goods-item__attr">
-							<span class="model">型号：200ml</span>
-						</div>
-						<div class="goods-item__price">
-							<span class="price-now">￥20</span>
-						</div>
-					</a>
-					<a class="goods-item__link">
-						<div class="goods-item__img" style="background-color: #FFFFFF;">
-							<img style="height: 100%;" src="img/201810240219510524.jpg">
-						</div>
-						<div class="goods-item__descr">
-							蓝月亮薰衣草洗衣液200ml十袋
-						</div>
-						<div class="goods-item__attr">
-							<span class="model">型号：200ml</span>
-						</div>
-						<div class="goods-item__price">
-							<span class="price-now">￥20</span>
-						</div>
-					</a>
-					
-					<a class="goods-item__link">
-						<div class="goods-item__img" style="background-color: #FFFFFF;">
-							<img style="height: 100%;" src="img/201810240219510524.jpg">
-						</div>
-						<div class="goods-item__descr">
-							蓝月亮薰衣草洗衣液200ml十袋
-						</div>
-						<div class="goods-item__attr">
-							<span class="model">型号：200ml</span>
-						</div>
-						<div class="goods-item__price">
-							<span class="price-now">￥20</span>
-						</div>
-					</a>
-					
-				</div>
+			<div class="cart-product__body" id="rec_goods">
 				
-				<div class="goods-row col-3">
-					<a class="goods-item__link">
-						<div class="goods-item__img" style="background-color: #FFFFFF;">
-							<img style="height: 100%;" src="img/201810240219510524.jpg">
-						</div>
-						<div class="goods-item__descr">
-							蓝月亮薰衣草洗衣液200ml十袋
-						</div>
-						<div class="goods-item__attr">
-							<span class="model">型号：200ml</span>
-						</div>
-						<div class="goods-item__price">
-							<span class="price-now">￥20</span>
-						</div>
-					</a>
-					<a class="goods-item__link">
-						<div class="goods-item__img" style="background-color: #FFFFFF;">
-							<img style="height: 100%;" src="img/201810240219510524.jpg">
-						</div>
-						<div class="goods-item__descr">
-							蓝月亮薰衣草洗衣液200ml十袋
-						</div>
-						<div class="goods-item__attr">
-							<span class="model">型号：200ml</span>
-						</div>
-						<div class="goods-item__price">
-							<span class="price-now">￥20</span>
-						</div>
-					</a>
-					
-					<a class="goods-item__link">
-						<div class="goods-item__img" style="background-color: #FFFFFF;">
-							<img style="height: 100%;" src="img/201810240219510524.jpg">
-						</div>
-						<div class="goods-item__descr">
-							蓝月亮薰衣草洗衣液200ml十袋
-						</div>
-						<div class="goods-item__attr">
-							<span class="model">型号：200ml</span>
-						</div>
-						<div class="goods-item__price">
-							<span class="price-now">￥20</span>
-						</div>
-					</a>
-					
-				</div>
-				
-				<div class="goods-row col-3">
-					<a class="goods-item__link">
-						<div class="goods-item__img" style="background-color: #FFFFFF;">
-							<img style="height: 100%;" src="img/201810240219510524.jpg">
-						</div>
-						<div class="goods-item__descr">
-							蓝月亮薰衣草洗衣液200ml十袋
-						</div>
-						<div class="goods-item__attr">
-							<span class="model">型号：200ml</span>
-						</div>
-						<div class="goods-item__price">
-							<span class="price-now">￥20</span>
-						</div>
-					</a>
-					<a class="goods-item__link">
-						<div class="goods-item__img" style="background-color: #FFFFFF;">
-							<img style="height: 100%;" src="img/201810240219510524.jpg">
-						</div>
-						<div class="goods-item__descr">
-							蓝月亮薰衣草洗衣液200ml十袋
-						</div>
-						<div class="goods-item__attr">
-							<span class="model">型号：200ml</span>
-						</div>
-						<div class="goods-item__price">
-							<span class="price-now">￥20</span>
-						</div>
-					</a>
-					
-					<a class="goods-item__link">
-						<div class="goods-item__img" style="background-color: #FFFFFF;">
-							<img style="height: 100%;" src="img/201810240219510524.jpg">
-						</div>
-						<div class="goods-item__descr">
-							蓝月亮薰衣草洗衣液200ml十袋
-						</div>
-						<div class="goods-item__attr">
-							<span class="model">型号：200ml</span>
-						</div>
-						<div class="goods-item__price">
-							<span class="price-now">￥20</span>
-						</div>
-					</a>
-					
-				</div>
 				
 			</div>
 		</div>
@@ -292,5 +112,16 @@
 			<span class="mui-tab-label">我的</span>
 		</a>
 	</nav>
+	
+	<script src="js/mui.min.js"></script>
+	<script type="text/javascript" charset="utf-8">
+	  	mui.init({
+	  	        swipeBack: true //启用右滑关闭功能
+	  	    });
+			
+		mui("#slider").slider({interval: 3000});
+	</script>
+	<script src="js/common.js"></script>
+	<script src="index.js"></script>
 </body>
 </html>
