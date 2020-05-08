@@ -34,35 +34,42 @@
 		<div class="mui-content pdb-50" style="background-color: white;">
 			<!--轮播图片-->
 			<div id="slider" class="mui-slider">
-				<div class="mui-slider-group mui-slider-group">
-					<div class="mui-slider-item">
+				<div class="mui-slider-group mui-slider-loop">
+					<div class="mui-slider-item mui-slider-item-duplicate">
 						<div style="height: 350px;display: flex;justify-content: center; align-items: center; ">
 							<img src="../img/201810240219510524.jpg">
 						</div>
 					</div>
 					<div class="mui-slider-item">
 						<div style="height: 350px;display: flex;justify-content: center; align-items: center; ">
-							<img src="../../img/goods-default.gif">
+							<img src="../img/201810240219510524.jpg">
+						</div>
+					</div>
+					<div class="mui-slider-item mui-slider-item-duplicate">
+						<div style="height: 350px;display: flex;justify-content: center; align-items: center; ">
+							<img src="../img/201810240219510524.jpg">
 						</div>
 					</div>
 				</div>
 				<div class="mui-slider-indicator">
-					<div class="mui-indicator" :class="{'mui-active':index==0}" v-for="(index,goodsPic) in GetGoodsPicURL"></div>
+					<div class="mui-indicator mui-active" ></div>
+					<div class="mui-indicator" ></div>
+					<div class="mui-indicator" ></div>
 				</div>
 			</div>
 
 			<div class="goods">
 				<div class="block-group">
-					<div class="block-row block-price" style="height: 40px;">
-						<span id="totalGoodsPrice">
+					<div class="block-row block-price">
+						<span id="totalGoodsPrice" style="font-size: 23px;">
 							￥12.90
 						</span>
-						<span id="unitPrice" style="color: #000; font-size: .2rem;font-weight: normal;margin-left: 15px;">
+						<span id="unitPrice" style="color: #000; font-size: 13px;font-weight: normal;margin-left: 15px;">
 							建议售价：￥0.65
 						</span>
 						<span class="tag" style="padding-top:2px">微商爆款</span>
 					</div>
-					<h1 class="block-row block-title" style="line-height:2;">
+					<h1 class="block-row block-title" style="line-height:2;padding:0px 10px">
 						宇航员纸尿裤
 					</h1>
 					
@@ -91,20 +98,13 @@
 							100*100
 						</div>
 					</div>
-					<div class="block-row block-attr mui-clearfix">
-						<label class="block-attr__title">产品规格</label>
-						<div class="block-attr__body">
-							100*100
-						</div>
-					</div>
 				</div>
 
 				<div class="goods-detail">
 					<div class="goods-detail__title">
 						商品详情
 					</div>
-					<div class="goods-detail__body" v-html="Goods.GoodsDesc">
-						<img src="../img/201810240219510524.jpg">
+					<div class="goods-detail__body">
 					</div>
 				</div>
 			</div>
@@ -142,5 +142,15 @@
 			</a>
 		</nav>
 		
+	<script src="../js/mui.min.js"></script>
+	<script type="text/javascript" charset="utf-8">
+		mui.init({
+				swipeBack: true //启用右滑关闭功能
+			});
+			
+		mui("#slider").slider({interval: 3000});
+	</script>
+	<script src="../js/common.js"></script>
+	<script src="goods-detail.js"></script>
 	</body>
 </html>

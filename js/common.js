@@ -15,6 +15,7 @@ var global_address_url = global_base_url +'/address';
 var global_order_list_url = global_base_url + '/order/list';
 var global_order_detail_url = global_base_url + '/order/detail';
 var global_order_reorder_url = global_base_url + '/order/reorder';
+var global_good_detail_url = global_base_url +'/good/goodDetail';
 
 //订单类型
 //待发货
