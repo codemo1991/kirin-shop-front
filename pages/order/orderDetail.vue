@@ -7,7 +7,7 @@
 			</view>
 			<!-- 商品列表 -->
 			<view class="g-item" v-for="(item, index) in goodData" :key="item.goodDetailId">
-				<image :src="item.imageUrl"></image>
+				<image :src="'http://yuns.ricebuy.cn/'+item.imageUrl"></image>
 				<view class="right">
 					<text class="title clamp">{{item.goodName}}</text>
 					<text class="spec">{{item.goodNorm}}</text>
@@ -51,9 +51,11 @@
 				<text class="price-tip">￥</text>
 				<text class="price">{{totalPrice}}</text>
 			</view>
-			<text v-if="orderStatus == 0" class="submit" @click="submit">撤单</text>
+			<text v-if="orderStatus == 0" class="submit" @click="cancelOrder(orderId)">撤单</text>
 			<text v-if="orderStatus == 1" class="submit" @click="submit">申请撤单</text>
 			<text v-if="orderStatus == 1" class="submit-quick" @click="submit">催单</text>
+			<text v-if="orderStatus == 3" class="submit-unable">已关闭</text>
+			<text v-if="orderStatus == 4" class="submit-unable">已完成</text>
 		</view>
 	</view>
 </template>
@@ -75,11 +77,35 @@
 			}
 		},
 		onLoad(option) {
-			this.orderId = option.orderId;
-			this.loadOrder();
+			this.orderId = parseInt(option.orderId)
+			this.loadOrder()
 		},
 		methods: {
-			submit() {
+			//取消订单
+			cancelOrder(item) {
+				var that = this
+				uni.showModal({
+					title: '温馨提示',
+					content: '确定需要申请撤单么？',
+					confirmText: "确定",
+					cancelText: "取消",
+					success: res2 => {
+						if (res2.confirm) {
+							const reqData = {
+								orderId:item
+							}
+							this.$http.post(this.$httpApi.order.cancelOrder, reqData).
+							then(function(response) {
+								that.$api.msg("取消订单成功")
+								setTimeout(() => {
+									that.loadOrder()
+								}, 600)
+								
+								
+							})
+						}
+					}
+				});
 			},
 			stopPrevent() {},
 			loadOrder() {
@@ -426,6 +452,16 @@
 			color: #fff;
 			font-size: 32upx;
 			background-color: #4CD964;
+		}
+		.submit-unable {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			width: 280upx;
+			height: 100%;
+			color: #fff;
+			font-size: 32upx;
+			background-color: #C0C4CC;
 		}
 	}
 

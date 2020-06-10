@@ -16,7 +16,7 @@
 
 				<scroll-view class="goods-box" scroll-x @click="navTo('/pages/order/orderDetail?orderId='+item.oid)">
 					<view v-for="(goodsItem, goodsIndex) in item.orderGoodInfos" :key="goodsIndex" class="goods-item">
-						<image class="goods-img" :src="goodsItem.imageUrl" mode="aspectFill"></image>
+						<image class="goods-img" :src="'http://yuns.ricebuy.cn/'+goodsItem.imageUrl" mode="aspectFill"></image>
 					</view>
 				</scroll-view>
 
@@ -29,7 +29,7 @@
 				</view>
 
 				<view class="action-box b-t" v-if="item.orderStatus == 0">
-					<button class="action-btn" @click="cancelOrder(item)">申请撤单</button>
+					<button class="action-btn" @click="cancelOrder(item,index)">申请撤单</button>
 				</view>
 			</view>
 		</mescroll-body>
@@ -64,7 +64,7 @@
 					textNoMore: "~别再拉了，我是有底线的~"
 				},
 				goods: [], //列表数据
-				tabs: ['全部', '待发货', '配货中', '已发货', '已完成', "已撤单"],
+				tabs: ['全部', '待发货','配货中', '已发货', '已完成', "已撤单"],
 				status: {
 					0: "待发货",
 					1: "配货中",
@@ -109,31 +109,29 @@
 				}, 600)
 			},
 			//取消订单
-			cancelOrder(item) {
-				uni.showLoading({
-					title: '请稍后'
-				})
-				setTimeout(() => {
-					let {
-						stateTip,
-						stateTipColor
-					} = this.orderStateExp(9);
-					item = Object.assign(item, {
-						state: 9,
-						stateTip,
-						stateTipColor
-					})
-
-					//取消订单后删除待付款中该项
-					let list = this.navList[1].orderList;
-					let index = list.findIndex(val => val.id === item.id);
-					index !== -1 && list.splice(index, 1);
-
-					uni.hideLoading();
-				}, 600)
+			cancelOrder(item,index) {
+				var that = this
+				uni.showModal({
+					title: '温馨提示',
+					content: '确定需要申请撤单么？',
+					confirmText: "确定",
+					cancelText: "取消",
+					success: res2 => {
+						if (res2.confirm) {
+							const reqData = {
+								orderId:item.oid
+							}
+							this.$http.post(this.$httpApi.order.cancelOrder, reqData).
+							then(function(response) {
+								that.$api.msg("取消订单成功")
+								that.tabItem[index].orderStatus = 3
+								
+							})
+						}
+					}
+				});
 			},
 			upCallback(page) {
-				//联网加载数据
 				let type = this.tabCodes[this.tabIndex];
 				var that = this;
 				let orderReq = {

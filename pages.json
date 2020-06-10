@@ -64,7 +64,8 @@
 		}, {
 			"path": "pages/cart/cart",
 			"style": {
-				"navigationBarTitleText": "购物车"
+				"navigationBarTitleText": "购物车",
+				"navigationStyle": "custom"
 			}
 		}, {
 			"path": "pages/public/login",
@@ -166,6 +167,7 @@
             "path" : "pages/category/category",
             "style" : {
 				"navigationBarTitleText": "分类",
+				"navigationStyle": "custom",
 				"app-plus": {
 					"bounce": "none"
 				}

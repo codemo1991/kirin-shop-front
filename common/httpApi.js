@@ -38,6 +38,7 @@ module.exports = {
 		makeOrder:"order/order",//下单
 		showOrder:"order/showOrder",//查看订单列表
 		showOrderDetail:"order/showOrderByOid",//查看订单详情
+		cancelOrder:"order/cancelOrder",//取消订单
 	},
 	my:{
 		account:"my/myInfo",//我的

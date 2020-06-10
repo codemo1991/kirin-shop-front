@@ -29,7 +29,6 @@
 			}
 		},
 		onLoad(option) {
-			console.log(option.source);
 			this.source = option.source;
 			this.loadDefaultData();
 		},

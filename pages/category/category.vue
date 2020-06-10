@@ -3,7 +3,7 @@
 
 		<!-- 地址 -->
 		<view class="top--panel">
-			<view @click="navTo('/pages/address/address')" class="address-section">
+			<view @click="navTo('/pages/address/address?source=1')" class="address-section">
 				<view v-if="!addressData.name" class="order-content">
 					<text class="yticon icon-shouhuodizhi"></text>
 					<view class="cen">
@@ -174,6 +174,8 @@
 		},
 		onShow() {
 			this.getListData();
+		},
+		onLoad() {
 			if (this.hasLogin) {
 				this.loadAddressInfo();
 			} else {
@@ -189,9 +191,7 @@
 					defaultFlag: 0,
 				}
 			}
-
 		},
-		onLoad() {},
 		methods: {
 			navTo(url) {
 				if (!this.hasLogin) {
@@ -581,7 +581,7 @@
 				background: $uni-color-primary;
 				font-size: $font-base + 2upx;
 				color: #fff;
-				margin: 30upx auto 20upx;
+				/* margin: 30upx auto 20upx; */
 			}
 		}
 

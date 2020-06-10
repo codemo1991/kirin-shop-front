@@ -154,7 +154,7 @@
 				<view class="attr-list">
 					<text>数量</text>
 					<view class="item-list">
-						<uni-number-box class="step" :min="1" :value="num" @change="numberChange"></uni-number-box>
+						<uni-number-box class="step" :min="1" :max="maxGoodNum" :value="num" @change="numberChange"></uni-number-box>
 					</view>
 				</view>
 				<button class="btn" @click="dialogType == 'buy'? buy() : add2ShopCar()">完成</button>
@@ -177,6 +177,7 @@
 		},
 		data() {
 			return {
+				maxGoodNum : 1,
 				dialogType: null,
 				shopcarNum: 0,
 				goodDetailId: '',
@@ -309,6 +310,8 @@
 				list.forEach(item => {
 					if (item.pid === pid) {
 						this.$set(item, 'selected', false);
+						console.log(item)
+						this.maxGoodNum = item.store
 					}
 				})
 
