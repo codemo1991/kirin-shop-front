@@ -248,9 +248,10 @@
 				goodsList: []
 			};
 		},
-
-		onLoad() {
+		onShow() {
 			this.loadHomeBaseInfo();
+		},
+		onLoad() {
 		},
 		methods: {
 			async loadHomeBaseInfo() {

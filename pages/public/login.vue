@@ -33,9 +33,7 @@
 </template>
 
 <script>
-	import {
-		mapMutations
-	} from 'vuex';
+	import { mapMutations } from 'vuex';
 
 	export default {
 		data() {
@@ -46,7 +44,6 @@
 			}
 		},
 		onLoad() {
-
 		},
 		methods: {
 			...mapMutations(['login']),
@@ -73,7 +70,7 @@
 					}
 				}).then(function(response) {
 					//这里只会在接口是成功状态返回
-					localStorage.setItem("token", response);
+					that.login(response)
 					uni.switchTab({
 						url: `/pages/index/index`
 					})

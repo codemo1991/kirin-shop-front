@@ -4,12 +4,15 @@ import App from './App'
 import Json from './Json' //测试用数据
 import $http from 'js_sdk/zhouWei-request/requestConfig';
 import httpApi from './common/httpApi'
+import HttpCache from './common/cache'
 
 // 注册全局组件
 import MescrollBody from "@/components/mescroll-uni/mescroll-body.vue"
 import MescrollUni from "@/components/mescroll-uni/mescroll-uni.vue"
 Vue.component('mescroll-body', MescrollBody)
 Vue.component('mescroll-uni', MescrollUni)
+Vue.prototype.$SysCache = HttpCache
+Vue.prototype.$store = store
 
 /**
  *  因工具函数属于公司资产, 所以直接在Vue实例挂载几个常用的函数

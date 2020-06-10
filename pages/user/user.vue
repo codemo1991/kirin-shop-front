@@ -2,17 +2,17 @@
 	<view class="container">
 
 		<view class="user-section">
-			<image class="bg" src="/static/user-bg.jpg"></image>
+			<image class="bg" src="/static/background.jpg"></image>
 			<view class="user-info-box">
 				<view class="portrait-box">
-					<image class="portrait" :src="userInfo.portrait || '/static/missing-face.png'"></image>
+					<image class="portrait" src='/static/missing-face.png'></image>
 				</view>
 				<view class="info-box">
 					<text class="username">{{accountName || '游客'}}</text>
 				</view>
 			</view>
 			<view class="vip-card-box">
-				<image class="card-bg" src="/static/vip-card-bg.png" mode=""></image>
+				<image class="card-bg" src="" mode=""></image>
 				<view class="tit">
 					<text class="yticon icon-iLinkapp-"></text>
 					彩虹云购会员
@@ -85,7 +85,7 @@
 				<list-cell icon="icon-iconfontweixin" iconColor="#e07472" title="我的账单" tips="您的资金流水明细" @eventClick="navTo('/pages/money/waterBill')"></list-cell>
 				<list-cell icon="icon-dizhi" iconColor="#5fcda2" title="地址管理" @eventClick="navTo('/pages/address/address')"></list-cell>
 				<list-cell icon="icon-share" iconColor="#9789f7" title="分享" tips="邀请好友赢10万大礼"></list-cell>
-				<list-cell icon="icon-shezhi1" iconColor="#e07472" title="设置" border="" @eventClick="navTo('/pages/set/set')"></list-cell>
+				<list-cell icon="icon-shezhi1" iconColor="#e07472" title="去登录" v-if="!hasLogin" @eventClick="navTo('/pages/public/login')"></list-cell>
 			</view>
 		</view>
 
@@ -109,12 +109,17 @@
 				coverTransform: 'translateY(0px)',
 				coverTransition: '0s',
 				moving: false,
-				accountName:'',
-				accountRemain:''
+				accountName: '',
+				accountRemain: 0,
 			}
 		},
-		onLoad() {
-			this.loanUserInfo();
+		onShow() {
+			if (this.hasLogin) {
+				this.loanUserInfo();
+			} else {
+				this.accountName = '',
+					this.accountRemain = 0
+			}
 		},
 		// #ifndef MP
 		onNavigationBarButtonTap(e) {

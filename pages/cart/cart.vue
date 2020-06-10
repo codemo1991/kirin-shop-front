@@ -3,14 +3,14 @@
 		<!-- 空白页 -->
 		<view v-if="empty===true" class="empty">
 			<image src="/static/emptyCart.jpg" mode="aspectFit"></image>
-			<view class="empty-tips">
+			<view v-if="hasLogin" class="empty-tips">
 				空空如也
 				<navigator class="navigator" url="../index/index" open-type="switchTab">随便逛逛></navigator>
 			</view>
-			<!-- <view v-else class="empty-tips">
+			<view v-else class="empty-tips">
 				空空如也
 				<view class="navigator" @click="navToLogin">去登陆></view>
-			</view> -->
+			</view>
 		</view>
 		<view v-else>
 			<!-- 列表 -->
@@ -67,15 +67,20 @@
 			return {
 				total: 0, //总价格
 				allChecked: false, //全选状态  true|false
-				empty: false, //空白页现实  true|false
+				empty: true, //空白页现实  true|false
 				cartList: [],
 			};
 		},
 		onShow() {
-			this.loadShopCar();
+			if(this.hasLogin){
+				this.loadShopCar();
+			}
+			this.cartList = []
 		},
 		onLoad() {
-			// this.loadShopCar();
+		},
+		computed: {
+			...mapState(['hasLogin', 'userInfo'])
 		},
 		watch: {
 			//显示空白页
@@ -232,6 +237,9 @@
 				then(function(response) {
 					//这里只会在接口是成功状态返回
 					let list = response.list;
+					if(list.size > 0){
+						that.empty = false;
+					}
 					let cartList = list.map(item => {
 						item.checked = true;
 						return item;

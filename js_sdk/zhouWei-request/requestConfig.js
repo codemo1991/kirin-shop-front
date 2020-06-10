@@ -1,5 +1,9 @@
 import request from "./request";
-let baseUrl = "http://172.31.226.81:8081/";
+import HttpCache from '../../common/cache.js'
+
+// let baseUrl = "http://www.ricebuy.cn/backend/";
+let baseUrl = "http://127.0.0.1:8082/";
+
 //可以new多个request来支持多个域名请求
 let $http = new request({
 	//接口请求地址
@@ -49,7 +53,7 @@ $http.requestStart = function(options) {
 		}
 	}
 	//请求前加入token
-	var token = localStorage.getItem("token");
+	var token = HttpCache.get("user_account")['token'];
 	if(token != null && token != ''){
 		options.header['jwt'] = token;
 	}
@@ -95,7 +99,8 @@ $http.dataFactory = function(res) {
 		if (httpData.code == "0") {
 			// 返回正确的结果(then接受数据)
 			res.resolve(httpData.data);
-		} else if (httpData.code == "1000" || httpData.code == "1001") { //未登录或登录已失效
+		} else if (httpData.code == "6") { //未登录或登录已失效
+		    HttpCache.remove("user_account");
 			if (loginPopupNum <= 0) {
 				loginPopupNum++;
 				uni.showModal({
@@ -115,7 +120,12 @@ $http.dataFactory = function(res) {
 			}
 			// 返回错误的结果(catch接受数据)
 			res.reject(res.response);
-		} else { //其他错误提示
+		} else if (httpData.code == "3") {
+			
+		}
+		
+		else { //其他错误提示
+			
 			if (res.isPrompt) { //设置可以提示的时候
 				setTimeout(function() {
 					uni.showToast({

@@ -31,7 +31,7 @@
 			</view>
 			<!-- 商品列表 -->
 			<view class="g-item" v-for="(item, index) in goodData" :key="item.goodDetailId">
-				<image :src="item.imgUrl"></image>
+				<image :src="'http://yuns.ricebuy.cn/'+item.imgUrl"></image>
 				<view class="right">
 					<text class="title clamp">{{item.name}}</text>
 					<text class="spec">{{item.property}}</text>

@@ -19,6 +19,8 @@ module.exports = {
 	user:{
 		login:"login/userLogin",//用户登录
 		account:"my/myInfo",//用户信息
+		logout:"login/userLogout",//用户退出
+		
 	},
 	shopcar:{
 		add2shopCar:"shopCar/addShopCar",//添加到购物车

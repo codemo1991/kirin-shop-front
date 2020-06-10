@@ -13,21 +13,12 @@
 			<text class="cell-more yticon icon-you"></text>
 		</view>
 		
-		<view class="list-cell m-t">
-			<text class="cell-tit">消息推送</text>
-			<switch checked color="#fa436a" @change="switchChange" />
-		</view>
 		<view class="list-cell m-t b-b" @click="navTo('清除缓存')" hover-class="cell-hover" :hover-stay-time="50">
 			<text class="cell-tit">清除缓存</text>
 			<text class="cell-more yticon icon-you"></text>
 		</view>
-		<view class="list-cell b-b" @click="navTo('关于Dcloud')" hover-class="cell-hover" :hover-stay-time="50">
-			<text class="cell-tit">关于Dcloud</text>
-			<text class="cell-more yticon icon-you"></text>
-		</view>
-		<view class="list-cell">
-			<text class="cell-tit">检查更新</text>
-			<text class="cell-tip">当前版本 1.0.3</text>
+		<view class="list-cell b-b" @click="navTo('关于彩虹云购')" hover-class="cell-hover" :hover-stay-time="50">
+			<text class="cell-tit">关于彩虹云购</text>
 			<text class="cell-more yticon icon-you"></text>
 		</view>
 		<view class="list-cell log-out-btn" @click="toLogout">
@@ -48,9 +39,8 @@
 		},
 		methods:{
 			...mapMutations(['logout']),
-
 			navTo(url){
-				this.$api.msg(`跳转到${url}`);
+				this.$api.msg(`${url}`);
 			},
 			//退出登录
 			toLogout(){
@@ -58,20 +48,25 @@
 				    content: '确定要退出登录么',
 				    success: (e)=>{
 				    	if(e.confirm){
-				    		this.logout();
-				    		setTimeout(()=>{
-				    			uni.navigateBack();
-				    		}, 200)
+				    		this.toLogOut();
 				    	}
 				    }
 				});
 			},
-			//switch
-			switchChange(e){
-				let statusTip = e.detail.value ? '打开': '关闭';
-				this.$api.msg(`${statusTip}消息推送`);
-			},
-
+			async toLogOut() {
+				var that = this;
+				this.$http.post(this.$httpApi.user.logout, {
+				}).then(function(response) {
+					that.logout()
+					uni.switchTab({
+						url: `/pages/index/index`
+					})
+				}).catch(function(error) {
+					//这里只会在接口是失败状态返回，不需要去处理错误提示
+					console.log(error);
+					that.$api.msg("退出失败");
+				});
+			}
 		}
 	}
 </script>

@@ -119,8 +119,8 @@
 			</view>
 
 			<view class="action-btn-group">
-				<button type="primary" class=" action-btn no-border buy-now-btn" @click="buy">立即购买</button>
-				<button type="primary" class=" action-btn no-border add-cart-btn" @click="add2ShopCar">加入购物车</button>
+				<button type="primary" class=" action-btn no-border buy-now-btn" @click="buyToggleSpec">立即购买</button>
+				<button type="primary" class=" action-btn no-border add-cart-btn" @click="add2CarToggleSpec">加入购物车</button>
 			</view>
 		</view>
 
@@ -157,7 +157,7 @@
 						<uni-number-box class="step" :min="1" :value="num" @change="numberChange"></uni-number-box>
 					</view>
 				</view>
-				<button class="btn" @click="toggleSpec">完成</button>
+				<button class="btn" @click="dialogType == 'buy'? buy() : add2ShopCar()">完成</button>
 			</view>
 		</view>
 		<!-- 分享 -->
@@ -177,6 +177,7 @@
 		},
 		data() {
 			return {
+				dialogType: null,
 				shopcarNum: 0,
 				goodDetailId: '',
 				goodDetailPrice: '',
@@ -220,8 +221,32 @@
 
 		},
 		methods: {
+			add2CarToggleSpec(){
+				this.dialogType = 'add2Car'
+				if (this.specClass === 'show') {
+					this.specClass = 'hide';
+					setTimeout(() => {
+						this.specClass = 'none';
+					}, 250);
+				} else if (this.specClass === 'none') {
+					this.specClass = 'show';
+				}
+			},
+			buyToggleSpec(){
+				this.dialogType = 'buy'
+				if (this.specClass === 'show') {
+					this.specClass = 'hide';
+					setTimeout(() => {
+						this.specClass = 'none';
+					}, 250);
+				} else if (this.specClass === 'none') {
+					this.specClass = 'show';
+				}
+			},
 			numberChange(data) {
-				this.num = data;
+				if(data <= this.goodDetailStore){
+					this.num = data;
+				}
 			},
 			async getShopCarNum() {
 				var that = this;
@@ -299,7 +324,7 @@
 					if (item.selected === true) {
 						this.specSelected.push(item);
 						this.goodDetailPrice = item.price;
-						this.goodDetailStore = item.store;
+						this.goodDetailStore = parseInt(item.store);
 						this.goodDetailId = item.goodDetailId;
 					}
 				})
@@ -348,12 +373,12 @@
 						orderTemp: orderTemp
 					})}`
 				})
+				this.toggleSpec();
 			},
 			add2ShopCar() {
 				let goodDetailId = this.goodDetailId
 				if (!goodDetailId || !this.num || this.num == 0) {
 					this.$api.msg("请选择购买类型");
-					this.toggleSpec();
 					return;
 				}
 
@@ -366,6 +391,7 @@
 					//这里只会在接口是成功状态返回
 					that.$api.msg("加入购物车成功");
 					that.shopcarNum = parseInt(that.shopcarNum) + 1;
+					that.toggleSpec();
 				}).catch(function(error) {
 					//这里只会在接口是失败状态返回，不需要去处理错误提示
 				});
