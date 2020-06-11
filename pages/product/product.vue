@@ -21,7 +21,7 @@
 			<view class="bot-row">
 				<text>销量: {{sold}}</text>
 				<text>库存: {{store}}</text>
-				<text>浏览量: 768</text>
+				<text>浏览量: </text>
 			</view>
 		</view>
 
@@ -66,8 +66,8 @@
 			<view class="c-row b-b">
 				<text class="tit">时效</text>
 				<view class="bz-list con">
-					<text>山东 ·</text>
-					<text>24小时发货 ·</text>
+					<text style="margin-right: 5px;">{{deliveryFrom}} ·</text>
+					<text>{{deliveryTime}}</text>
 				</view>
 			</view>
 		</view>
@@ -131,7 +131,7 @@
 			<view class="mask"></view>
 			<view class="layer attr-content" @click.stop="stopPrevent">
 				<view class="a-t">
-					<image src="https://gd3.alicdn.com/imgextra/i3/0/O1CN01IiyFQI1UGShoFKt1O_!!0-item_pic.jpg_400x400.jpg"></image>
+					<image :src="goodDetailImg"></image>
 					<view class="right">
 						<text class="price">¥{{goodDetailPrice}}</text>
 						<text class="stock">库存：{{goodDetailStore}}件</text>
@@ -169,11 +169,18 @@
 	import share from '@/components/share';
 	import uniNumberBox from '@/components/uni-number-box/uni-number-box.vue';
 	import uniBadge from "@/components/uni-badge/uni-badge.vue";
+	import {
+		mapState
+	} from 'vuex';
+	import commonJs from '@/common/common.js'
 	export default {
 		components: {
 			share,
 			uniNumberBox,
 			uniBadge
+		},
+		computed:{
+			...mapState["hasLogin"]
 		},
 		data() {
 			return {
@@ -199,14 +206,18 @@
 					id: 1,
 					name: '商品品类',
 				}],
-				specChildList: []
+				specChildList: [],
+				deliveryFrom:'',
+				deliveryTime:'',
+				goodDetailImg:''
 			};
 		},
 		async onLoad(options) {
 			//接收传值,id里面放的是标题，因为测试数据并没写id 
 			let id = options.id;
 			this.loadGoodBaseInfo(id);
-			this.getShopCarNum();
+			if(this.hasLogin)
+				this.getShopCarNum();
 
 			//规格 默认选中第一条
 			this.specList.forEach(item => {
@@ -223,6 +234,9 @@
 		},
 		methods: {
 			add2CarToggleSpec(){
+				if(this.specChildList != null && this.specChildList.length >0 ){
+					this.selectSpec(0,this.specChildList[0].pid);
+				}
 				this.dialogType = 'add2Car'
 				if (this.specClass === 'show') {
 					this.specClass = 'hide';
@@ -234,6 +248,9 @@
 				}
 			},
 			buyToggleSpec(){
+				if(this.specChildList != null && this.specChildList.length >0 ){
+					this.selectSpec(0,this.specChildList[0].pid);
+				}
 				this.dialogType = 'buy'
 				if (this.specClass === 'show') {
 					this.specClass = 'hide';
@@ -288,6 +305,13 @@
 
 					let goodDetail = response.goodDetails;
 					that.specChildList = goodDetail;
+					
+					let deliveryFrom = response.deliveryFrom;
+					that.deliveryFrom = deliveryFrom;
+					
+					let deliveryTime = response.deliveryTime
+					that.deliveryTime = deliveryTime;
+					
 
 				}).catch(function(error) {
 					//这里只会在接口是失败状态返回，不需要去处理错误提示
@@ -295,6 +319,9 @@
 			},
 			//规格弹窗开关
 			toggleSpec() {
+				if(this.specChildList != null && this.specChildList.length >0 ){
+					this.selectSpec(0,this.specChildList[0].pid);
+				}
 				if (this.specClass === 'show') {
 					this.specClass = 'hide';
 					setTimeout(() => {
@@ -310,7 +337,6 @@
 				list.forEach(item => {
 					if (item.pid === pid) {
 						this.$set(item, 'selected', false);
-						console.log(item)
 						this.maxGoodNum = item.store
 					}
 				})
@@ -329,6 +355,7 @@
 						this.goodDetailPrice = item.price;
 						this.goodDetailStore = parseInt(item.store);
 						this.goodDetailId = item.goodDetailId;
+						this.goodDetailImg = item.imageUrl;
 					}
 				})
 
@@ -342,6 +369,10 @@
 				this.favorite = !this.favorite;
 			},
 			buy() {
+				if(!this.hasLogin){
+					commonJs.showUnloginModal()
+					return
+				}
 				var that = this;
 				let goodDetailId = this.goodDetailId
 				if (!goodDetailId || !this.num || this.num == 0) {
@@ -379,6 +410,10 @@
 				this.toggleSpec();
 			},
 			add2ShopCar() {
+				if(!this.hasLogin){
+					commonJs.showUnloginModal()
+					return
+				}
 				let goodDetailId = this.goodDetailId
 				if (!goodDetailId || !this.num || this.num == 0) {
 					this.$api.msg("请选择购买类型");

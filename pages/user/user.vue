@@ -17,7 +17,7 @@
 					<text class="yticon icon-iLinkapp-"></text>
 					彩虹云购会员
 				</view>
-				<text class="e-m">彩虹云购联盟</text>
+				<text class="e-m">灵犀严选联盟</text>
 				<text class="e-b">开通会员尊享折扣</text>
 			</view>
 		</view>
@@ -85,7 +85,7 @@
 				<list-cell icon="icon-iconfontweixin" iconColor="#e07472" title="我的账单" tips="您的资金流水明细" @eventClick="navTo('/pages/money/waterBill')"></list-cell>
 				<list-cell icon="icon-dizhi" iconColor="#5fcda2" title="地址管理" @eventClick="navTo('/pages/address/address')"></list-cell>
 				<list-cell icon="icon-share" iconColor="#9789f7" title="分享" tips="邀请好友赢10万大礼"></list-cell>
-				<list-cell icon="icon-shezhi1" iconColor="#e07472" title="去登录" v-if="!hasLogin" @eventClick="navTo('/pages/public/login')"></list-cell>
+				<list-cell icon="icon-shezhi1" iconColor="#e07472" title="去登录" v-if="!hasLogin" @eventClick="navTo('/pages/public/login',1)"></list-cell>
 			</view>
 		</view>
 
@@ -94,6 +94,7 @@
 </template>
 <script>
 	import listCell from '@/components/mix-list-cell';
+	import commonJs from '@/common/common.js'
 	import {
 		mapState
 	} from 'vuex';
@@ -125,7 +126,7 @@
 		onNavigationBarButtonTap(e) {
 			const index = e.index;
 			if (index === 0) {
-				this.navTo('/pages/set/set');
+				this.navTo('/pages/set/set',1);
 			} else if (index === 1) {
 				// #ifdef APP-PLUS
 				const pages = getCurrentPages();
@@ -161,10 +162,11 @@
 			 * 统一跳转接口,拦截未登录路由
 			 * navigator标签现在默认没有转场动画，所以用view
 			 */
-			navTo(url) {
-				// if (!this.hasLogin) {
-				// 	url = '/pages/public/login';
-				// }
+			navTo(url, type) {
+				if (!this.hasLogin && type !== 1) {
+					commonJs.showUnloginModal()
+					return
+				}
 				uni.navigateTo({
 					url
 				})

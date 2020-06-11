@@ -173,6 +173,19 @@
 			})
 		},
 		onShow() {
+			if(!this.hasLogin){
+				this.addressData= {
+					address: '',
+					city: '',
+					id: '',
+					name: '',
+					phone: '',
+					province: '',
+					zone: '',
+					id: '',
+					defaultFlag: 0,
+				};
+			}
 			this.getListData();
 		},
 		onLoad() {
