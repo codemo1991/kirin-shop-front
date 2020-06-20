@@ -15,6 +15,7 @@ module.exports = {
 	goods:{
 		iteminfo:"goods/goodDetail", // 商品详情 加载 
 		category:"goods/category", // 商品目录 加载
+		goodList:"goods/goodList"
 	},
 	user:{
 		login:"login/userLogin",//用户登录

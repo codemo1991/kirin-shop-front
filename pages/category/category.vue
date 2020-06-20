@@ -419,8 +419,11 @@
 					this.$api.msg("请选择要购买的商品!!!");
 					return;
 				}
+				if(this.addressData.id == null || this.addressData.id == ''){
+					this.$api.msg("请选择收货地址")
+					return
+				}
 				var that = this;
-
 				uni.showModal({
 					title: '提示',
 					content: '确认提交订单？',
@@ -832,7 +835,7 @@
 		margin-bottom: 100upx;
 		/* #endif */
 		position: fixed;
-		left: 30upx;
+		left: 300upx;
 		bottom: 30upx;
 		z-index: 95;
 		display: flex;

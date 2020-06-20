@@ -166,6 +166,10 @@
 			},
 			//清空
 			clearCart() {
+				if(!this.allChecked){
+					return;
+				}
+				
 				var that = this;
 				var index = [];
 				uni.showModal({

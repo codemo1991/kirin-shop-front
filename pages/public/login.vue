@@ -7,7 +7,7 @@
 		<view class="wrapper">
 			<view class="left-top-sign">LOGIN</view>
 			<view class="welcome">
-				欢迎加入彩虹云购！
+				欢迎加入灵犀严选！
 			</view>
 			<view class="input-content">
 				<view class="input-item">

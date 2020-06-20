@@ -16,6 +16,7 @@
 						<text class="number">x {{item.num}}</text>
 					</view>
 				</view>
+				<uni-tag :text='statusMap[item.orderGoodStatus]'  :type="statusBackgroupMap[item.orderGoodStatus]" :circle="false" size="small"></uni-tag>
 			</view>
 		</view>
 		<!-- 金额明细 -->
@@ -30,7 +31,8 @@
 			</view>
 			<view class="yt-list-cell b-b">
 				<text class="cell-tit clamp">收货地址</text>
-				<text class="cell-tip" style="width: 270px; line-height: normal;">{{receiver}} {{phone}} \n {{province}} {{city}}  {{zone}} {{address}}</text>
+				<text class="cell-tip" style="width: 270px; line-height: normal;">{{receiver}} {{phone}} \n {{province}} {{city}}
+					{{zone}} {{address}}</text>
 			</view>
 			<view class="yt-list-cell b-b">
 				<text class="cell-tit clamp">备注</text>
@@ -38,7 +40,7 @@
 			</view>
 			<view class="yt-list-cell b-b">
 				<text class="cell-tit clamp">快递单号</text>
-				<text class="cell-tip"  style="width: 270px; line-height: normal;">
+				<text class="cell-tip" style="width: 270px; line-height: normal;">
 					<text v-for="(item, index) in goodData" :key="item.goodDetailId">{{item.deliveryNo}} \n</text>
 				</text>
 			</view>
@@ -54,26 +56,44 @@
 			<text v-if="orderStatus == 0" class="submit" @click="cancelOrder(orderId)">撤单</text>
 			<text v-if="orderStatus == 1" class="submit" @click="submit">申请撤单</text>
 			<text v-if="orderStatus == 1" class="submit-quick" @click="submit">催单</text>
-			<text v-if="orderStatus == 3" class="submit-unable">已关闭</text>
+			<text v-if="orderStatus == 3 || orderStatus == 5" class="submit-unable">已关闭</text>
 			<text v-if="orderStatus == 4" class="submit-unable">已完成</text>
 		</view>
 	</view>
 </template>
 
 <script>
+	import uniTag from "@/components/uni-tag/uni-tag.vue"
 	export default {
+		components: {
+			uniTag
+		},
 		data() {
 			return {
-				goodData:[],
-				totalPrice:0,
-				orderId:0,
-				province:'',
-				city:'',
-				zone:'',
-				address:'',
-				receiver:'',
-				phone:'',
-				orderStatus:'',
+				goodData: [],
+				totalPrice: 0,
+				orderId: 0,
+				province: '',
+				city: '',
+				zone: '',
+				address: '',
+				receiver: '',
+				phone: '',
+				orderStatus: null,
+				statusMap: {
+					1: '待发货',
+					2: '待补发',
+					3: '申请退款',
+					4: '已退款',
+					5: '已发货'
+				},
+				statusBackgroupMap: {
+					1: 'default',
+					2: 'warning',
+					3: 'error',
+					4: 'error',
+					5: 'success'
+				}
 			}
 		},
 		onLoad(option) {
@@ -92,7 +112,7 @@
 					success: res2 => {
 						if (res2.confirm) {
 							const reqData = {
-								orderId:item
+								orderId: item
 							}
 							this.$http.post(this.$httpApi.order.cancelOrder, reqData).
 							then(function(response) {
@@ -100,8 +120,8 @@
 								setTimeout(() => {
 									that.loadOrder()
 								}, 600)
-								
-								
+
+
 							})
 						}
 					}
@@ -442,7 +462,7 @@
 			font-size: 32upx;
 			background-color: $base-color;
 		}
-		
+
 		.submit-quick {
 			display: flex;
 			align-items: center;
@@ -453,6 +473,7 @@
 			font-size: 32upx;
 			background-color: #4CD964;
 		}
+
 		.submit-unable {
 			display: flex;
 			align-items: center;

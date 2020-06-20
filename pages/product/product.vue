@@ -113,14 +113,14 @@
 				<text>购物车</text>
 			</navigator>
 
-			<view class="p-b-btn" :class="{active: favorite}" @click="toFavorite">
+			<view class="p-b-btn" :class="{active: favorite}" @click="shareOn">
 				<text class="yticon icon-share"></text>
 				<text>分享</text>
 			</view>
 
 			<view class="action-btn-group">
-				<button type="primary" class=" action-btn no-border buy-now-btn" @click="buyToggleSpec">立即购买</button>
 				<button type="primary" class=" action-btn no-border add-cart-btn" @click="add2CarToggleSpec">加入购物车</button>
+				<button type="primary" class=" action-btn no-border buy-now-btn" @click="buyToggleSpec">立即购买</button>
 			</view>
 		</view>
 
@@ -146,7 +146,8 @@
 				<view v-for="(item,index) in specList" :key="index" class="attr-list">
 					<text>{{item.name}}</text>
 					<view class="item-list">
-						<text v-for="(childItem, childIndex) in specChildList" class="tit" :class="{selected: childItem.selected}" @click="selectSpec(childIndex, childItem.pid)">
+						<text v-for="(childItem, childIndex) in specChildList" :key="childIndex" class="tit" :class="{selected: childItem.selected}"
+						 @click="selectSpec(childIndex, childItem.pid)">
 							{{childItem.name}}
 						</text>
 					</view>
@@ -160,8 +161,10 @@
 				<button class="btn" @click="dialogType == 'buy'? buy() : add2ShopCar()">完成</button>
 			</view>
 		</view>
-		<!-- 分享 -->
-		<share ref="share" :contentHeight="580" :shareList="shareList"></share>
+		<!-- 分享弹窗 -->
+		<uni-popup ref="sharepopup" type="bottom">
+			<share-btn :sharedataTemp="sharedata"></share-btn>
+		</uni-popup>
 	</view>
 </template>
 
@@ -173,18 +176,22 @@
 		mapState
 	} from 'vuex';
 	import commonJs from '@/common/common.js'
+	import uniPopup from '@/components/uni-popup/uni-popup.vue';
+	import shareBtn from '@/components/share-btn/share-btn.vue';
 	export default {
 		components: {
 			share,
 			uniNumberBox,
-			uniBadge
+			uniBadge,
+			uniPopup,
+			shareBtn
 		},
-		computed:{
-			...mapState["hasLogin"]
+		computed: {
+			...mapState(['hasLogin', 'userInfo'])
 		},
 		data() {
 			return {
-				maxGoodNum : 1,
+				maxGoodNum: 1,
 				dialogType: null,
 				shopcarNum: 0,
 				goodDetailId: '',
@@ -199,7 +206,6 @@
 				specSelected: [],
 				goodName: '',
 				favorite: true,
-				shareList: [],
 				imgList: [],
 				desc: ``,
 				specList: [{
@@ -207,16 +213,23 @@
 					name: '商品品类',
 				}],
 				specChildList: [],
-				deliveryFrom:'',
-				deliveryTime:'',
-				goodDetailImg:''
+				deliveryFrom: '',
+				deliveryTime: '',
+				goodDetailImg: '',
+				sharedata: {
+					type: 1,
+					strShareUrl: "",
+					strShareTitle: "",
+					strShareSummary: "",
+					strShareImageUrl: ""
+				}
 			};
 		},
 		async onLoad(options) {
 			//接收传值,id里面放的是标题，因为测试数据并没写id 
 			let id = options.id;
 			this.loadGoodBaseInfo(id);
-			if(this.hasLogin)
+			if (this.hasLogin)
 				this.getShopCarNum();
 
 			//规格 默认选中第一条
@@ -229,13 +242,11 @@
 					}
 				}
 			})
-			this.shareList = await this.$api.json('shareList');
-
 		},
 		methods: {
-			add2CarToggleSpec(){
-				if(this.specChildList != null && this.specChildList.length >0 ){
-					this.selectSpec(0,this.specChildList[0].pid);
+			add2CarToggleSpec() {
+				if (this.specChildList != null && this.specChildList.length > 0) {
+					this.selectSpec(0, this.specChildList[0].pid);
 				}
 				this.dialogType = 'add2Car'
 				if (this.specClass === 'show') {
@@ -247,9 +258,9 @@
 					this.specClass = 'show';
 				}
 			},
-			buyToggleSpec(){
-				if(this.specChildList != null && this.specChildList.length >0 ){
-					this.selectSpec(0,this.specChildList[0].pid);
+			buyToggleSpec() {
+				if (this.specChildList != null && this.specChildList.length > 0) {
+					this.selectSpec(0, this.specChildList[0].pid);
 				}
 				this.dialogType = 'buy'
 				if (this.specClass === 'show') {
@@ -262,7 +273,7 @@
 				}
 			},
 			numberChange(data) {
-				if(data <= this.goodDetailStore){
+				if (data <= this.goodDetailStore) {
 					this.num = data;
 				}
 			},
@@ -305,13 +316,23 @@
 
 					let goodDetail = response.goodDetails;
 					that.specChildList = goodDetail;
-					
+
 					let deliveryFrom = response.deliveryFrom;
 					that.deliveryFrom = deliveryFrom;
-					
+
 					let deliveryTime = response.deliveryTime
 					that.deliveryTime = deliveryTime;
 					
+					let imgUrl = response.img
+					
+					//分享
+					that.sharedata = {
+						type: 1,
+						strShareUrl: "http://www.ricebuy.cn/#/pages/product/product?id="+id,
+						strShareTitle: goodName,
+						strShareSummary: "我在【灵犀】发现了超值的【"+goodName+"】,推荐给你，一起省钱吧~",
+						strShareImageUrl: "http://yuns.ricebuy.cn/"+imgUrl
+					}
 
 				}).catch(function(error) {
 					//这里只会在接口是失败状态返回，不需要去处理错误提示
@@ -319,8 +340,8 @@
 			},
 			//规格弹窗开关
 			toggleSpec() {
-				if(this.specChildList != null && this.specChildList.length >0 ){
-					this.selectSpec(0,this.specChildList[0].pid);
+				if (this.specChildList != null && this.specChildList.length > 0) {
+					this.selectSpec(0, this.specChildList[0].pid);
 				}
 				if (this.specClass === 'show') {
 					this.specClass = 'hide';
@@ -369,7 +390,7 @@
 				this.favorite = !this.favorite;
 			},
 			buy() {
-				if(!this.hasLogin){
+				if (!this.hasLogin) {
 					commonJs.showUnloginModal()
 					return
 				}
@@ -384,9 +405,9 @@
 				let goodDetail = this.specChildList;
 				let goodsData = [];
 				let orderTemp = {};
-				
-				goodDetail.forEach(item =>{
-					if(item.goodDetailId == goodDetailId){
+
+				goodDetail.forEach(item => {
+					if (item.goodDetailId == goodDetailId) {
 						goodsData.push({
 							goodDetailId: item.goodDetailId,
 							num: that.num,
@@ -397,7 +418,7 @@
 						})
 					}
 				})
-				
+
 				orderTemp["goodsData"] = goodsData;
 				orderTemp["orderType"] = 1;
 				orderTemp["totalPrice"] = parseInt(this.num) * parseFloat(goodsData[0].price);
@@ -410,7 +431,7 @@
 				this.toggleSpec();
 			},
 			add2ShopCar() {
-				if(!this.hasLogin){
+				if (!this.hasLogin) {
 					commonJs.showUnloginModal()
 					return
 				}
@@ -434,7 +455,10 @@
 					//这里只会在接口是失败状态返回，不需要去处理错误提示
 				});
 			},
-			stopPrevent() {}
+			stopPrevent() {},
+			shareOn() {
+				this.$refs.sharepopup.open();
+			}
 		},
 
 	}

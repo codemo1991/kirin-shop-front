@@ -1,35 +1,39 @@
 <template>
 	<view class="container">
-		<view class="list-cell b-b m-t" @click="navTo('个人资料')" hover-class="cell-hover" :hover-stay-time="50">
+		<view class="list-cell b-b m-t"  hover-class="cell-hover" :hover-stay-time="50">
 			<text class="cell-tit">个人资料</text>
 			<text class="cell-more yticon icon-you"></text>
 		</view>
-		<view class="list-cell b-b" @click="navTo('收货地址')" hover-class="cell-hover" :hover-stay-time="50">
+		<view class="list-cell b-b"  hover-class="cell-hover" :hover-stay-time="50">
 			<text class="cell-tit">收货地址</text>
 			<text class="cell-more yticon icon-you"></text>
 		</view>
-		<view class="list-cell" @click="navTo('实名认证')" hover-class="cell-hover" :hover-stay-time="50">
+		<view class="list-cell"  hover-class="cell-hover" :hover-stay-time="50">
 			<text class="cell-tit">实名认证</text>
 			<text class="cell-more yticon icon-you"></text>
 		</view>
 		
-		<view class="list-cell m-t b-b" @click="navTo('清除缓存')" hover-class="cell-hover" :hover-stay-time="50">
+		<view class="list-cell m-t b-b"  hover-class="cell-hover" :hover-stay-time="50">
 			<text class="cell-tit">清除缓存</text>
 			<text class="cell-more yticon icon-you"></text>
 		</view>
-		<view class="list-cell b-b" @click="navTo('关于彩虹云购')" hover-class="cell-hover" :hover-stay-time="50">
-			<text class="cell-tit">关于彩虹云购</text>
+		<view class="list-cell b-b"  hover-class="cell-hover" :hover-stay-time="50">
+			<text class="cell-tit">关于灵犀严选</text>
 			<text class="cell-more yticon icon-you"></text>
 		</view>
-		<view class="list-cell log-out-btn" @click="toLogout">
+		<view v-if="hasLogin == true" class="list-cell log-out-btn" @click="toLogout">
 			<text class="cell-tit">退出登录</text>
+		</view>
+		<view v-else class="list-cell log-out-btn" @click="navTo('/pages/public/login')">
+			<text class="cell-tit">登录</text>
 		</view>
 	</view>
 </template>
 
 <script>
 	import {  
-	    mapMutations  
+	    mapMutations,
+		mapState
 	} from 'vuex';
 	export default {
 		data() {
@@ -37,11 +41,11 @@
 				
 			};
 		},
+		computed:{
+			...mapState(['hasLogin'])
+		},
 		methods:{
 			...mapMutations(['logout']),
-			navTo(url){
-				this.$api.msg(`${url}`);
-			},
 			//退出登录
 			toLogout(){
 				uni.showModal({
@@ -66,7 +70,12 @@
 					console.log(error);
 					that.$api.msg("退出失败");
 				});
-			}
+			},
+			navTo(url) {
+				uni.navigateTo({
+					url
+				})
+			},
 		}
 	}
 </script>

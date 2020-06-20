@@ -29,6 +29,7 @@ const store = new Vuex.Store({
             state.openid = null;
             state.userinfo = [];
             HttpCache.remove("user_account"); // 清理用户信息
+			var token = HttpCache.get("user_account")['token'];
         },
         setOpenid(state, openid) {
             state.openid = openid

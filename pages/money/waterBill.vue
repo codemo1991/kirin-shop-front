@@ -2,7 +2,7 @@
 	<view class="content b-t">
 		<mescroll-body ref="mescrollRef" @init="mescrollInit" :down="downOption" @down="downCallback" :up="upOption" @up="upCallback"
 		 @emptyclick="emptyClick">
-			<view class="list b-b" v-for="(item, index) in tabItem" :key="index">
+			<view class="list b-b" v-for="(item, index) in tabItem" :key="index" @click="showReason(item)">
 				<view class="wrapper">
 					<view class="u-box">
 						<text class="name">{{item.time}}</text>
@@ -13,9 +13,7 @@
 						<text v-else class="tagRed">{{item.billTypeName}}</text>
 						<text class="address" v-if="item.billType == 3 || item.billType == 2">-{{item.balance}} 元</text>
 						<text class="address" v-else>+{{item.balance}} 元</text>
-						
 					</view>
-					
 				</view>
 			</view>
 		</mescroll-body>
@@ -75,6 +73,14 @@
 					title: '点击了按钮,具体逻辑自行实现'
 				})
 			},
+			showReason(item){
+				if(item.billType == 3 || item.billType == 4 || item.billType ==5){
+					const url  = "/pages/order/orderDetail?orderId=" +item.orderId
+					uni.navigateTo({
+						url
+					})
+				}
+			}
 			
 		}
 	}

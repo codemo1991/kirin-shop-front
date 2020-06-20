@@ -25,33 +25,21 @@
 				<text class="num">{{swiperLength}}</text>
 			</view>
 		</view>
-		<!-- 分类 -->
-		<view class="cate-section">
-			<view class="cate-item">
-				<image src="/static/temp/c3.png"></image>
-				<text>我有货源</text>
-			</view>
-			<view class="cate-item">
-				<image src="/static/temp/c5.png"></image>
-				<text>个护美妆</text>
-			</view>
-			<view class="cate-item">
-				<image src="/static/temp/c6.png"></image>
-				<text>营养保健</text>
-			</view>
-			<view class="cate-item">
-				<image src="/static/temp/c7.png"></image>
-				<text>家居厨卫</text>
-			</view>
-			<view class="cate-item">
-				<image src="/static/temp/c8.png"></image>
-				<text>速食生鲜</text>
-			</view>
-		</view>
 
-		<view class="ad-1">
-			<image src="/static/temp/ad1.jpg" mode="scaleToFill"></image>
+
+		<!-- 分类 -->
+		<view v-for="(item,index) in  menuList" :key="index">
+			<view class="cate-section">
+				<view class="cate-item" v-for="(item2,index2) in item" :key="index2"
+				@click="navToListPage(item2.cateId)">
+					<image :src="item2.imgUrl"></image>
+					<text>{{item2.name}}</text>
+				</view>
+			</view>
 		</view>
+		<!-- <view class="ad-1">
+			<image src="/static/temp/ad1.jpg" mode="scaleToFill"></image>
+		</view> -->
 
 		<!-- 秒杀楼层 -->
 		<!-- <view class="seckill-section m-t">
@@ -216,7 +204,7 @@
 		<view class="f-header m-t">
 			<image src="/static/temp/h1.png"></image>
 			<view class="tit-box">
-				<text class="tit">强烈推荐</text>
+				<text class="tit">热销榜</text>
 				<text class="tit2">recommend</text>
 			</view>
 			<text class="yticon icon-you"></text>
@@ -245,29 +233,31 @@
 				swiperCurrent: 0,
 				swiperLength: 0,
 				carouselList: [],
-				goodsList: []
+				goodsList: [],
+				menuList: [],
 			};
 		},
 		onShow() {
 			this.loadHomeBaseInfo();
 		},
-		onLoad() {
-		},
+		onLoad() {},
 		methods: {
 			async loadHomeBaseInfo() {
 				var that = this;
-				this.$http.get(this.$httpApi.home.banner, {
-				}).
+				this.$http.get(this.$httpApi.home.banner, {}).
 				then(function(response) {
 					//这里只会在接口是成功状态返回
 					let carouselList = response.gallerys;
 					that.carouselList = carouselList;
 					// that.titleNViewBackground = carouselList[0].background;
 					that.swiperLength = carouselList.length;
-					
+
 					let goodsList = response.recGoods;
 					that.goodsList = goodsList || [];
 					
+					let goodMenus = response.goodMenus;
+					that.menuList = goodMenus || [];
+
 				}).catch(function(error) {
 					//这里只会在接口是失败状态返回，不需要去处理错误提示
 				});
@@ -286,11 +276,17 @@
 					url: `/pages/product/product?id=${id}`
 				})
 			},
+			//分类列表
+			navToListPage(item){
+				uni.navigateTo({
+					url: `/pages/product/list?classId=${item}`
+				})
+			}
 		},
 		// #ifndef MP
 		// 标题栏input搜索框点击
 		onNavigationBarSearchInputClicked: async function(e) {
-			
+
 		},
 		//点击导航栏 buttons 时触发
 		onNavigationBarButtonTap(e) {
@@ -469,9 +465,9 @@
 			width: 88upx;
 			height: 88upx;
 			margin-bottom: 14upx;
-			border-radius: 50%;
-			opacity: .7;
-			box-shadow: 4upx 4upx 20upx rgba(250, 67, 106, 0.3);
+			// border-radius: 50%;
+			// opacity: .7;
+			// box-shadow: 4upx 4upx 20upx rgba(250, 67, 106, 0.3);
 		}
 	}
 

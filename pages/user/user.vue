@@ -15,7 +15,7 @@
 				<image class="card-bg" src="" mode=""></image>
 				<view class="tit">
 					<text class="yticon icon-iLinkapp-"></text>
-					彩虹云购会员
+					灵犀严选会员
 				</view>
 				<text class="e-m">灵犀严选联盟</text>
 				<text class="e-b">开通会员尊享折扣</text>
@@ -85,7 +85,7 @@
 				<list-cell icon="icon-iconfontweixin" iconColor="#e07472" title="我的账单" tips="您的资金流水明细" @eventClick="navTo('/pages/money/waterBill')"></list-cell>
 				<list-cell icon="icon-dizhi" iconColor="#5fcda2" title="地址管理" @eventClick="navTo('/pages/address/address')"></list-cell>
 				<list-cell icon="icon-share" iconColor="#9789f7" title="分享" tips="邀请好友赢10万大礼"></list-cell>
-				<list-cell icon="icon-shezhi1" iconColor="#e07472" title="去登录" v-if="!hasLogin" @eventClick="navTo('/pages/public/login',1)"></list-cell>
+				<list-cell icon="icon-shezhi1" iconColor="#e07472" title="去登录" v-if="hasLogin == false" @eventClick="navTo('/pages/public/login',1)"></list-cell>
 			</view>
 		</view>
 
@@ -119,14 +119,14 @@
 				this.loanUserInfo();
 			} else {
 				this.accountName = '',
-					this.accountRemain = 0
+				this.accountRemain = 0
 			}
 		},
 		// #ifndef MP
 		onNavigationBarButtonTap(e) {
 			const index = e.index;
 			if (index === 0) {
-				this.navTo('/pages/set/set',1);
+				this.navTo('/pages/set/set', 1);
 			} else if (index === 1) {
 				// #ifdef APP-PLUS
 				const pages = getCurrentPages();
