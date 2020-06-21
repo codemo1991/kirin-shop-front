@@ -40,6 +40,7 @@ module.exports = {
 		showOrder:"order/showOrder",//查看订单列表
 		showOrderDetail:"order/showOrderByOid",//查看订单详情
 		cancelOrder:"order/cancelOrder",//取消订单
+		orderOperate:"order/orderOperate"//订单催单、申请退单动作
 	},
 	my:{
 		account:"my/myInfo",//我的

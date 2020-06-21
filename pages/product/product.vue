@@ -21,7 +21,7 @@
 			<view class="bot-row">
 				<text>销量: {{sold}}</text>
 				<text>库存: {{store}}</text>
-				<text>浏览量: </text>
+				<text>热度: 100 </text>
 			</view>
 		</view>
 
@@ -97,7 +97,7 @@
 			<view class="d-header">
 				<text>图文详情</text>
 			</view>
-			<rich-text :nodes="desc"></rich-text>
+			<rich-text :nodes="desc" class="content"></rich-text>
 		</view>
 
 		<!-- 底部操作菜单 -->
@@ -322,16 +322,16 @@
 
 					let deliveryTime = response.deliveryTime
 					that.deliveryTime = deliveryTime;
-					
+
 					let imgUrl = response.img
-					
+
 					//分享
 					that.sharedata = {
 						type: 1,
-						strShareUrl: "http://www.ricebuy.cn/#/pages/product/product?id="+id,
+						strShareUrl: "http://www.ricebuy.cn/#/pages/product/product?id=" + id,
 						strShareTitle: goodName,
-						strShareSummary: "我在【灵犀】发现了超值的【"+goodName+"】,推荐给你，一起省钱吧~",
-						strShareImageUrl: "http://yuns.ricebuy.cn/"+imgUrl
+						strShareSummary: "我在【灵犀】发现了超值的【" + goodName + "】,推荐给你，一起省钱吧~",
+						strShareImageUrl: "http://yuns.ricebuy.cn/" + imgUrl
 					}
 
 				}).catch(function(error) {
@@ -401,6 +401,11 @@
 					this.toggleSpec();
 					return;
 				};
+				
+				if(this.num > this.goodDetailStore){
+					this.$api.msg("抱歉！商品数量不足!");
+					return;
+				}
 
 				let goodDetail = this.specChildList;
 				let goodsData = [];
@@ -438,6 +443,11 @@
 				let goodDetailId = this.goodDetailId
 				if (!goodDetailId || !this.num || this.num == 0) {
 					this.$api.msg("请选择购买类型");
+					return;
+				}
+				
+				if(this.num > this.goodDetailStore){
+					this.$api.msg("抱歉！商品数量不足!");
 					return;
 				}
 

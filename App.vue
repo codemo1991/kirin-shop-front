@@ -11,7 +11,7 @@
 		},
 		onLaunch: function() {
 			let userInfo = uni.getStorageSync('userInfo') || '';
-			if(userInfo.id){
+			if (userInfo.id) {
 				//更新登陆状态
 				uni.getStorage({
 					key: 'userInfo',
@@ -20,7 +20,7 @@
 					}
 				});
 			}
-			
+
 		},
 		onShow: function() {
 			console.log('App Show')
@@ -364,6 +364,7 @@
 	video {
 		box-sizing: border-box;
 	}
+
 	/* 骨架屏替代方案 */
 	.Skeleton {
 		background: #f3f3f3;
@@ -447,5 +448,9 @@
 
 	.placeholder {
 		color: #999999;
+	}
+
+	uni-rich-text img {
+		width: 100% !important;
 	}
 </style>

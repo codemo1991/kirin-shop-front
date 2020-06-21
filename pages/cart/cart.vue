@@ -240,7 +240,7 @@
 				this.$http.get(this.$httpApi.shopcar.showShopCar, {}).
 				then(function(response) {
 					//这里只会在接口是成功状态返回
-					let list = response.list;
+					let list = response;
 					if(list.size > 0){
 						that.empty = false;
 					}

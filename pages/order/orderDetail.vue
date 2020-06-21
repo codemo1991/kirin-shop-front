@@ -54,8 +54,8 @@
 				<text class="price">{{totalPrice}}</text>
 			</view>
 			<text v-if="orderStatus == 0" class="submit" @click="cancelOrder(orderId)">撤单</text>
-			<text v-if="orderStatus == 1" class="submit" @click="submit">申请撤单</text>
-			<text v-if="orderStatus == 1" class="submit-quick" @click="submit">催单</text>
+			<text v-if="orderStatus == 1" class="submit" @click="submitOp(orderId,2)">申请撤单</text>
+			<text v-if="orderStatus == 1" class="submit-quick" @click="submitOp(orderId,1)">催单</text>
 			<text v-if="orderStatus == 3 || orderStatus == 5" class="submit-unable">已关闭</text>
 			<text v-if="orderStatus == 4" class="submit-unable">已完成</text>
 		</view>
@@ -120,8 +120,6 @@
 								setTimeout(() => {
 									that.loadOrder()
 								}, 600)
-
-
 							})
 						}
 					}
@@ -147,6 +145,27 @@
 				}).catch(function(error) {
 					//这里只会在接口是失败状态返回，不需要去处理错误提示
 					that.mescroll.endErr();
+				});
+			},
+			submitOp(orderId, type){
+				let opType = type == 2?'申请撤单':'催单';
+				var that = this;
+				uni.showModal({
+					title: '温馨提示',
+					content: '确定需要'+opType+'么？',
+					confirmText: "确定",
+					cancelText: "取消",
+					success: res2 => {
+						if (res2.confirm) {
+							let reqData = {orderId:orderId, opType : type}
+							this.$http.get(this.$httpApi.order.orderOperate, reqData).
+							then(function(response) {
+								that.$api.msg("申请成功");
+							}).catch(function(error) {
+								//这里只会在接口是失败状态返回，不需要去处理错误提示
+							});
+						}
+					}
 				});
 			}
 		}
