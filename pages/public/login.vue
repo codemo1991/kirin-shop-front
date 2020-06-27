@@ -25,6 +25,16 @@
 				忘记密码?
 			</view>
 		</view>
+		
+		<view class="login-footer">
+			<view class="footer-tip flex">其他登录方式</view>
+			<view class="footer-other flex">
+				<view class="other-list">
+					<image src="../../static/index/weixin.png" mode="aspectFill" @tap="wxLogin()"></image>
+				</view>
+			</view>
+		</view>
+		
 		<view class="register-section">
 			还没有账号?
 			<text @click="toRegist">去注册</text>
@@ -34,6 +44,7 @@
 
 <script>
 	import { mapMutations } from 'vuex';
+	import Wechat from '@/common/wechat/wechat';
 
 	export default {
 		data() {
@@ -43,7 +54,23 @@
 				logining: false
 			}
 		},
-		onLoad() {
+		onLoad(options) {
+			let code = options.code;
+			if(code){
+				this.$api.msg(code)
+				var that = this;
+				this.$http.post(this.$httpApi.user.login, {
+					"code": code
+				}).then(function(response) {
+					//这里只会在接口是成功状态返回
+					
+					uni.switchTab({
+						url: `/pages/index/index`
+					})
+				}).catch(function(error) {
+					console.log(error);
+				});
+			}
 		},
 		methods: {
 			...mapMutations(['login']),
@@ -79,6 +106,13 @@
 					console.log(error);
 				});
 				this.logining = false;
+			},
+			async wxLogin() {
+				this.$api.msg("微信登陆暂时只对公测用户开发，请联系客服");
+				return;
+				let wechat = new Wechat();
+				let token = await wechat.login();
+				
 			}
 		},
 
@@ -239,6 +273,50 @@
 		text {
 			color: $font-color-spec;
 			margin-left: 10upx;
+		}
+	}
+	
+	.login-footer {
+		padding: 0 70upx;
+	
+		.footer-tip {
+			align-items: center;
+			font-size: 24upx;
+			color: #999999;
+			text-align: center;
+	
+			&:before {
+				flex: 1;
+				content: '';
+				height: 2upx;
+				background: #D0D0D0;
+				margin-right: 30upx;
+			}
+	
+			&:after {
+				margin-left: 30upx;
+				flex: 1;
+				content: '';
+				height: 2upx;
+				background: #D0D0D0;
+			}
+	
+		}
+	
+		.footer-other {
+			padding: 40upx 0 100upx 0;
+			justify-content: center;
+	
+			.other-list {
+				width: 80upx;
+				height: 80upx;
+				margin: 0 auto;
+	
+				image {
+					width: 100%;
+					height: 100%;
+				}
+			}
 		}
 	}
 </style>

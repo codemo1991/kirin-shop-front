@@ -13,6 +13,20 @@ export default {
         //初始化sdk配置  
     initJssdk:function(callback ,url){  
 		//服务端进行签名 ，可使用uni.request替换。 签名算法请看文档
+		uni.request({
+		    url: 'https://www.example.com/request', //仅为示例，并非真实接口地址。
+		    data: {
+		        text: 'uni.request'
+		    },
+		    header: {
+		        'custom-header': 'hello' //自定义请求头信息
+		    },
+		    success: (res) => {
+		        console.log(res.data);
+		        this.text = 'request success';
+		    }
+		});
+		
 		fetch.request('{后端处理jssdk签名地址}',{url:url}).then(data => {
 			console.log('initJssdk',data)
 			if(data){  

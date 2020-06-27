@@ -54,15 +54,14 @@
 				<text class="con t-r red">领取优惠券</text>
 				<text class="yticon icon-you"></text>
 			</view> -->
-			<!-- <view class="c-row b-b">
-				<text class="tit">促销活动</text>
+			<view class="c-row b-b">
+				<text class="tit">运费规则</text>
 				<view class="con-list">
-					<text>新人首单送20元无门槛代金券</text>
-					<text>订单满50减10</text>
-					<text>订单满100减30</text>
-					<text>单笔购买满两件免邮费</text>
+					<text>包邮数量：{{pinkAge}}件</text>
+					<text>运费：{{deliveryFee}}元</text>
+					<text>偏远地区请补拍运费</text>
 				</view>
-			</view> -->
+			</view>
 			<view class="c-row b-b">
 				<text class="tit">时效</text>
 				<view class="bz-list con">
@@ -113,7 +112,7 @@
 				<text>购物车</text>
 			</navigator>
 
-			<view class="p-b-btn" :class="{active: favorite}" @click="shareOn">
+			<view class="p-b-btn" :class="{active: favorite}" @click="share">
 				<text class="yticon icon-share"></text>
 				<text>分享</text>
 			</view>
@@ -165,11 +164,15 @@
 		<uni-popup ref="sharepopup" type="bottom">
 			<share-btn :sharedataTemp="sharedata"></share-btn>
 		</uni-popup>
+		
+		<!-- 分享组件 -->
+		<shareGuide v-model="showShare"></shareGuide>
 	</view>
 </template>
 
 <script>
-	import share from '@/components/share';
+	import sdk from '@/common/wechat/sdk';
+	import shareGuide from '@/components/modal/share-guide.vue';
 	import uniNumberBox from '@/components/uni-number-box/uni-number-box.vue';
 	import uniBadge from "@/components/uni-badge/uni-badge.vue";
 	import {
@@ -180,17 +183,18 @@
 	import shareBtn from '@/components/share-btn/share-btn.vue';
 	export default {
 		components: {
-			share,
 			uniNumberBox,
 			uniBadge,
 			uniPopup,
-			shareBtn
+			shareBtn,
+			shareGuide
 		},
 		computed: {
 			...mapState(['hasLogin', 'userInfo'])
 		},
 		data() {
 			return {
+				showShare:false,
 				maxGoodNum: 1,
 				dialogType: null,
 				shopcarNum: 0,
@@ -215,6 +219,8 @@
 				specChildList: [],
 				deliveryFrom: '',
 				deliveryTime: '',
+				deliveryFee: 0,
+				pinkAge: 1,
 				goodDetailImg: '',
 				sharedata: {
 					type: 1,
@@ -324,11 +330,15 @@
 					that.deliveryTime = deliveryTime;
 
 					let imgUrl = response.img
+					
+					that.deliveryFee = response.deliveryFee
+					that.pinkAge = response.pinkAge
+					
 
 					//分享
 					that.sharedata = {
 						type: 1,
-						strShareUrl: "http://www.ricebuy.cn/#/pages/product/product?id=" + id,
+						strShareUrl: "https://www.ricebuy.cn/#/pages/product/product?id=" + id,
 						strShareTitle: goodName,
 						strShareSummary: "我在【灵犀】发现了超值的【" + goodName + "】,推荐给你，一起省钱吧~",
 						strShareImageUrl: "http://yuns.ricebuy.cn/" + imgUrl
@@ -383,7 +393,9 @@
 			},
 			//分享
 			share() {
-				this.$refs.share.toggleMask();
+				// this.$refs.share.toggleMask();
+				sdk.share(this.sharedata)
+				this.showShare = true;
 			},
 			//收藏
 			toFavorite() {
@@ -401,8 +413,8 @@
 					this.toggleSpec();
 					return;
 				};
-				
-				if(this.num > this.goodDetailStore){
+
+				if (this.num > this.goodDetailStore) {
 					this.$api.msg("抱歉！商品数量不足!");
 					return;
 				}
@@ -445,8 +457,8 @@
 					this.$api.msg("请选择购买类型");
 					return;
 				}
-				
-				if(this.num > this.goodDetailStore){
+
+				if (this.num > this.goodDetailStore) {
 					this.$api.msg("抱歉！商品数量不足!");
 					return;
 				}

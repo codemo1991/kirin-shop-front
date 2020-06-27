@@ -14,25 +14,27 @@
 					<view class="price-box">
 						<text class="price">￥{{item.price}}</text>
 						<text class="number">x {{item.num}}</text>
+						<text v-if="item.deliveryFee > 0" style="padding-left: 20px;font-size: small;color: #CF2D28;">运费{{item.deliveryFee}}元</text>
 					</view>
 				</view>
-				<uni-tag :text='statusMap[item.orderGoodStatus]'  :type="statusBackgroupMap[item.orderGoodStatus]" :circle="false" size="small"></uni-tag>
+				<uni-tag :text='statusMap[item.orderGoodStatus]' :type="statusBackgroupMap[item.orderGoodStatus]" :circle="false"
+				 size="small"></uni-tag>
 			</view>
 		</view>
 		<!-- 金额明细 -->
 		<view class="yt-list">
 			<view class="yt-list-cell b-b">
-				<text class="cell-tit clamp">商品金额</text>
+				<text class="cell-tit clamp">商品金额(含运费)</text>
 				<text class="cell-tip">￥{{totalPrice}}</text>
 			</view>
 			<view class="yt-list-cell b-b">
 				<text class="cell-tit clamp">运费</text>
-				<text class="cell-tip">免运费</text>
+				<text v-if="totalDeliveryFee === 0" class="cell-tip">免运费</text>
+				<text v-else class="cell-tip" style="color: #CF2D28;">￥{{totalDeliveryFee}}</text>
 			</view>
 			<view class="yt-list-cell b-b">
 				<text class="cell-tit clamp">收货地址</text>
-				<text class="cell-tip" style="width: 270px; line-height: normal;">{{receiver}} {{phone}} \n {{province}} {{city}}
-					{{zone}} {{address}}</text>
+				<text class="cell-tip" style="width: 270px; line-height: normal;">{{receiver}} {{phone}} \n {{province}} {{city}} {{zone}} \n {{address}}</text>
 			</view>
 			<view class="yt-list-cell b-b">
 				<text class="cell-tit clamp">备注</text>
@@ -40,9 +42,12 @@
 			</view>
 			<view class="yt-list-cell b-b">
 				<text class="cell-tit clamp">快递单号</text>
-				<text class="cell-tip" style="width: 270px; line-height: normal;">
-					<text v-for="(item, index) in goodData" :key="item.goodDetailId">{{item.deliveryNo}} \n</text>
+				<text class="cell-tip" style="width: 200px; line-height: normal;">
+					<text v-for="(item, index) in goodData" :key="item.goodDetailId">
+						<text v-if="item.deliveryNo">{{item.deliveryNo}} \n</text>
+					</text>
 				</text>
+				<uni-tag v-if="deliveryNos" text='复制单号' type='error' :circle="true" inverted="true" size="small" style="width: 70px;float: right;" @click="copyOrderNo(deliveryNos)"></uni-tag>
 			</view>
 		</view>
 
@@ -64,6 +69,8 @@
 
 <script>
 	import uniTag from "@/components/uni-tag/uni-tag.vue"
+	import h5Copy from '@/js_sdk/junyi-h5-copy/junyi-h5-copy/junyi-h5-copy.js'
+
 	export default {
 		components: {
 			uniTag
@@ -72,6 +79,7 @@
 			return {
 				goodData: [],
 				totalPrice: 0,
+				totalDeliveryFee: 0,
 				orderId: 0,
 				province: '',
 				city: '',
@@ -93,7 +101,8 @@
 					3: 'error',
 					4: 'error',
 					5: 'success'
-				}
+				},
+				deliveryNos:''
 			}
 		},
 		onLoad(option) {
@@ -135,6 +144,7 @@
 					//这里只会在接口是成功状态返回
 					that.goodData = response.orderGoodInfos;
 					that.totalPrice = response.amount;
+					that.totalDeliveryFee = response.totalDeliveryFee;
 					that.province = response.province;
 					that.city = response.city;
 					that.zone = response.area;
@@ -142,22 +152,34 @@
 					that.receiver = response.receiver;
 					that.phone = response.phone;
 					that.orderStatus = response.orderStatus;
+					for (let k in that.goodData) {
+						let deliveryNo = that.goodData[k].deliveryNo; 
+						if(deliveryNo){
+							deliveryNo += '\n'
+							that.deliveryNos += deliveryNo
+						}
+						console.log(that.deliveryNos)
+					}
+					
 				}).catch(function(error) {
 					//这里只会在接口是失败状态返回，不需要去处理错误提示
 					that.mescroll.endErr();
 				});
 			},
-			submitOp(orderId, type){
-				let opType = type == 2?'申请撤单':'催单';
+			submitOp(orderId, type) {
+				let opType = type == 2 ? '申请撤单' : '催单';
 				var that = this;
 				uni.showModal({
 					title: '温馨提示',
-					content: '确定需要'+opType+'么？',
+					content: '确定需要' + opType + '么？',
 					confirmText: "确定",
 					cancelText: "取消",
 					success: res2 => {
 						if (res2.confirm) {
-							let reqData = {orderId:orderId, opType : type}
+							let reqData = {
+								orderId: orderId,
+								opType: type
+							}
 							this.$http.get(this.$httpApi.order.orderOperate, reqData).
 							then(function(response) {
 								that.$api.msg("申请成功");
@@ -167,6 +189,20 @@
 						}
 					}
 				});
+			},
+			copyOrderNo(deliveryNos){
+				let content = deliveryNos // 复制内容，必须字符串，数字需要转换为字符串
+				const result = h5Copy(content)
+				if (result === false) {
+					uni.showToast({
+						title: '不支持',
+					})
+				} else {
+					uni.showToast({
+						title: '快递号复制成功',
+						icon: 'none'
+					})
+				}
 			}
 		}
 	}

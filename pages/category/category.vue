@@ -173,8 +173,8 @@
 			})
 		},
 		onShow() {
-			if(!this.hasLogin){
-				this.addressData= {
+			if (!this.hasLogin) {
+				this.addressData = {
 					address: '',
 					city: '',
 					id: '',
@@ -243,19 +243,31 @@
 				let order = this.orderTemp;
 				let totalPrice = 0;
 				for (var key in order) {
-					totalPrice += (parseFloat(order[key].price) * order[key].num);
+					totalPrice += order[key].totalPirceAmount;
 				}
 				this.total = totalPrice;
 			},
 			//数量
 			numberChange(changeNumber, index) {
+				changeNumber = parseInt(changeNumber)
 				let goodDetail = this.goodTemp[index];
 				if (changeNumber == 0) {
 					delete this.orderTemp[goodDetail.goodDetailId];
 				} else {
 					goodDetail["num"] = parseInt(changeNumber);
-					goodDetail["totalPirce"] = "￥" + parseFloat(goodDetail.price) * changeNumber;
-					goodDetail["desc"] = "单价：" + goodDetail.price + "元 购买数量：" + changeNumber;
+					let deliveryFeeAmount = 0;
+					if (goodDetail.pinkAge > 1 && changeNumber % goodDetail.pinkAge > 0) {
+						deliveryFeeAmount = parseFloat(goodDetail.deliveryFee);
+						goodDetail["deliveryFeeAmount"] = " , 运费：" + goodDetail.deliveryFee + "元";
+					}
+					goodDetail["totalPirce"] = "￥" + (parseFloat(goodDetail.price) * changeNumber + deliveryFeeAmount);
+					goodDetail["totalPirceAmount"] = parseFloat(goodDetail.price) * changeNumber + deliveryFeeAmount;
+					goodDetail["totalDeliveryFee"] = deliveryFeeAmount;
+					let deliveryDesc = goodDetail.deliveryFeeAmount;
+					goodDetail["desc"] = "单价：" + goodDetail.price + "元 , 数量：" + changeNumber;
+					if(deliveryDesc != undefined){
+						goodDetail["desc"] += deliveryDesc
+					}
 					this.orderTemp[goodDetail.goodDetailId] = goodDetail;
 				}
 				this.calcTotal();
@@ -406,7 +418,7 @@
 					});
 					return
 				}
-				
+
 				if (!this.total || this.total == 0) {
 					this.$api.msg("请选择要购买的商品!!!");
 					return;
@@ -414,12 +426,12 @@
 				this.toggleSpec();
 			},
 			makeOrder() {
-				
+
 				if (!this.total || this.total == 0) {
 					this.$api.msg("请选择要购买的商品!!!");
 					return;
 				}
-				if(this.addressData.id == null || this.addressData.id == ''){
+				if (this.addressData.id == null || this.addressData.id == '') {
 					this.$api.msg("请选择收货地址")
 					return
 				}
@@ -428,7 +440,7 @@
 					title: '提示',
 					content: '确认提交订单？',
 					success: function(res) {
-						if(res.confirm){
+						if (res.confirm) {
 							let orderInfo = {};
 							let addressId = that.addressData.id;
 							let goodDetails = [];
@@ -438,12 +450,12 @@
 								goodDetails.push(key);
 								nums.push(that.orderTemp[key].num);
 							};
-							
+
 							orderInfo["orderType"] = orderType;
 							orderInfo["goodDetailIds"] = goodDetails;
 							orderInfo["nums"] = nums;
 							orderInfo["addressId"] = addressId;
-							
+
 							that.$http.post(that.$httpApi.order.makeOrder, orderInfo).
 							then(function(response) {
 								that.orderTemp = {};
@@ -834,8 +846,8 @@
 		/* #ifdef H5 */
 		margin-bottom: 100upx;
 		/* #endif */
-		position: fixed;
-		left: 300upx;
+		 position: fixed;
+		left: 90upx;
 		bottom: 30upx;
 		z-index: 95;
 		display: flex;

@@ -38,6 +38,7 @@
 					<view class="price-box">
 						<text class="price">￥{{item.price}}</text>
 						<text class="number">x {{item.num}}</text>
+						<text v-if="item.totalDeliveryFee > 0" style="padding-left: 20px;font-size: small;color: #CF2D28;">运费{{item.totalDeliveryFee}}元</text>
 					</view>
 				</view>
 			</view>
@@ -66,7 +67,7 @@
 		<!-- 金额明细 -->
 		<view class="yt-list">
 			<view class="yt-list-cell b-b">
-				<text class="cell-tit clamp">商品金额</text>
+				<text class="cell-tit clamp">商品总额(含运费)</text>
 				<text class="cell-tip">￥{{totalPrice}}</text>
 			</view>
 			<!-- <view class="yt-list-cell b-b">
@@ -75,7 +76,8 @@
 			</view> -->
 			<view class="yt-list-cell b-b">
 				<text class="cell-tit clamp">运费</text>
-				<text class="cell-tip">免运费</text>
+				<text v-if="allDeliveryFee === 0" class="cell-tip">免运费</text>
+				<text v-else class="cell-tip" style="color: #CF2D28;">￥{{allDeliveryFee}}</text>
 			</view>
 			<view class="yt-list-cell desc-cell">
 				<text class="cell-tit clamp">备注</text>
@@ -135,9 +137,10 @@
 					province: '',
 					zone: '',
 				},
-				goodData:[],
-				totalPrice:0,
-				orderData:{}
+				goodData: [],
+				totalPrice: 0,
+				orderData: {},
+				allDeliveryFee: 0
 			}
 		},
 		onLoad(option) {
@@ -145,18 +148,17 @@
 			let data = JSON.parse(option.data).orderTemp;
 			this.goodData = data.goodsData;
 			this.totalPrice = data.totalPrice;
+			this.allDeliveryFee = data.allDeliveryFee;
 			this.orderData = data;
 			this.loadDefaultAddr();
+			this.calPrice(data);
 		},
 		methods: {
-			numberChange(data) {
-				this.number = data.number;
-			},
-			changePayType(type) {
-				this.payType = type;
+			calPrice(data) {
+				console.log(data);
 			},
 			submit() {
-				if(!this.addressData.id){
+				if (!this.addressData.id) {
 					this.$api.msg("请选择收货地址");
 					return;
 				}
@@ -167,7 +169,6 @@
 					})}`
 				})
 			},
-			stopPrevent() {},
 			loadDefaultAddr() {
 				var that = this;
 				this.$http.get(this.$httpApi.address.defaultAddr, {}).

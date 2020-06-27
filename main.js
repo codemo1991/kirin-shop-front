@@ -15,12 +15,12 @@ Vue.prototype.$SysCache = HttpCache
 Vue.prototype.$store = store
 
 
-// #ifdef H5  
-import wechat from './common/wechat'
+
+import wechat from './common/wechat/wechat'
 if (wechat.isWechat()) {
 	Vue.prototype.$wechat = wechat;
 }
-// #endif
+
 
 /**
  *  因工具函数属于公司资产, 所以直接在Vue实例挂载几个常用的函数
@@ -73,6 +73,10 @@ Vue.prototype.$httpApi = httpApi
 Vue.config.devtools = true
 
 App.mpType = 'app'
+
+
+import wxsdk from '@/common/wechat/sdk'
+Vue.prototype.$wxsdk = wxsdk;
 
 
 const app = new Vue({

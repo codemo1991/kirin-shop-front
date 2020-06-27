@@ -25,7 +25,10 @@
 						<view class="item-right">
 							<text class="clamp title">{{item.name}}</text>
 							<text class="attr">{{item.property}}</text>
-							<text class="price">¥{{item.price}}</text>
+							<text class="price">
+								<text>¥{{item.price}}元</text>
+								<text v-if="item.totalDeliveryFee > 0" style="padding-left: 20px;font-size: small;color: #CF2D28;">运费:{{item.totalDeliveryFee}}元</text>
+							</text>
 							<uni-number-box class="step" :min="1" :max="100" :value="item.num" :index="index" @change="numberChange($event,index)"></uni-number-box>
 						</view>
 						<text class="del-btn yticon icon-fork" @click="deleteCartItem(index)"></text>
@@ -72,13 +75,12 @@
 			};
 		},
 		onShow() {
-			if(this.hasLogin){
+			if (this.hasLogin) {
 				this.loadShopCar();
 			}
 			this.cartList = []
 		},
-		onLoad() {
-		},
+		onLoad() {},
 		computed: {
 			...mapState(['hasLogin', 'userInfo'])
 		},
@@ -120,7 +122,7 @@
 					})
 					this.allChecked = checked;
 				}
-				this.calcTotal(type);
+				this.calcTotal();
 			},
 			//数量
 			numberChange(changeNumber, index) {
@@ -166,10 +168,10 @@
 			},
 			//清空
 			clearCart() {
-				if(!this.allChecked){
+				if (!this.allChecked) {
 					return;
 				}
-				
+
 				var that = this;
 				var index = [];
 				uni.showModal({
@@ -201,6 +203,12 @@
 				list.forEach(item => {
 					if (item.checked === true) {
 						total += item.price * item.num;
+						if (item.pinkAge > 1 && item.num % item.pinkAge > 0) {
+							total += item.deliveryFee
+							item.totalDeliveryFee = item.deliveryFee
+						} else {
+							item.totalDeliveryFee = 0
+						}
 					} else if (checked === true) {
 						checked = false;
 					}
@@ -213,22 +221,28 @@
 				let list = this.cartList;
 				let goodsData = [];
 				let orderTemp = {};
+				let allDeliveryFee = 0;
 				list.forEach(item => {
 					if (item.checked) {
 						goodsData.push({
 							goodDetailId: item.goodDetailId,
 							num: item.num,
-							price:item.price,
-							name:item.name,
-							imgUrl:item.imgUrl,
-							property:item.property
+							price: item.price,
+							name: item.name,
+							imgUrl: item.imgUrl,
+							property: item.property,
+							pinkAge: item.pinkAge,
+							deliveryFee: item.deliveryFee,
+							totalDeliveryFee: item.totalDeliveryFee
 						})
+						allDeliveryFee += item.totalDeliveryFee
 					}
 				})
 				orderTemp["goodsData"] = goodsData;
 				orderTemp["totalPrice"] = this.total;
+				orderTemp["allDeliveryFee"] = allDeliveryFee;
 				orderTemp["orderType"] = 2;
-				
+
 				uni.navigateTo({
 					url: `/pages/order/createOrder?data=${JSON.stringify({
 						orderTemp: orderTemp
@@ -241,7 +255,7 @@
 				then(function(response) {
 					//这里只会在接口是成功状态返回
 					let list = response;
-					if(list.size > 0){
+					if (list.size > 0) {
 						that.empty = false;
 					}
 					let cartList = list.map(item => {

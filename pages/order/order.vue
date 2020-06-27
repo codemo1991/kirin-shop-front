@@ -9,7 +9,10 @@
 
 			<view v-for="(item,index) in tabItem" :key="index" class="order-item">
 				<view class="i-top b-b">
-					<text class="time">订单号：{{item.orderNo}}</text>
+					<text class="time">订单号：{{item.orderNo}}
+						<text style="padding-left: 5px;" class="yticon icon-bianji" @click="copyOrderNo(item.orderNo)"></text>
+					</text>
+
 					<text class="state" style="color: red">{{status[item.orderStatus]}}</text>
 					<text v-if="item.state===9" class="del-btn yticon icon-iconfontshanchu1" @click="deleteOrder(index)"></text>
 				</view>
@@ -40,6 +43,8 @@
 <script>
 	import MescrollMixin from "@/components/mescroll-uni/mescroll-mixins.js";
 	import AppTabs from "@/components/app-tabs.vue";
+	import h5Copy from '@/js_sdk/junyi-h5-copy/junyi-h5-copy/junyi-h5-copy.js'
+	
 	export default {
 		mixins: [MescrollMixin], // 使用mixin (在main.js注册全局组件，内部已注册onPullDownRefresh)
 		components: {
@@ -64,7 +69,7 @@
 					textNoMore: "~别再拉了，我是有底线的~"
 				},
 				goods: [], //列表数据
-				tabs: ['全部', '待发货','配货中','撤单中','已发货', "已关闭"],
+				tabs: ['全部', '待发货', '配货中', '撤单中', '已发货', "已关闭"],
 				status: {
 					0: "待发货",
 					1: "配货中",
@@ -110,7 +115,7 @@
 				}, 600)
 			},
 			//取消订单
-			cancelOrder(item,index) {
+			cancelOrder(item, index) {
 				var that = this
 				uni.showModal({
 					title: '温馨提示',
@@ -120,13 +125,13 @@
 					success: res2 => {
 						if (res2.confirm) {
 							const reqData = {
-								orderId:item.oid
+								orderId: item.oid
 							}
 							this.$http.post(this.$httpApi.order.cancelOrder, reqData).
 							then(function(response) {
 								that.$api.msg("取消订单成功")
 								that.tabItem[index].orderStatus = 3
-								
+
 							})
 						}
 					}
@@ -172,7 +177,23 @@
 			tabChange() {
 				this.goods = [] // 先置空列表,显示加载进度
 				this.mescroll.resetUpScroll() // 再刷新列表数据
+			},
+			//点击复制订单号
+			copyOrderNo(orderNo) {
+				let content = orderNo // 复制内容，必须字符串，数字需要转换为字符串
+				const result = h5Copy(content)
+				if (result === false) {
+					uni.showToast({
+						title: '不支持',
+					})
+				} else {
+					uni.showToast({
+						title: '单号复制成功',
+						icon: 'none'
+					})
+				}
 			}
+
 		},
 	}
 </script>
