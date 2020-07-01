@@ -14,7 +14,7 @@
 			<!-- 背景色区域 -->
 			<view class="titleNview-background" style="backgroundColor:rgb(183, 73, 69)"></view>
 			<swiper class="carousel" circular @change="swiperChange">
-				<swiper-item v-for="(item, index) in carouselList" :key="index" class="carousel-item" @click="navToDetailPage({title: '轮播广告'})">
+				<swiper-item v-for="(item, index) in carouselList" :key="index" class="carousel-item" @click="navTo(item.url)">
 					<image :src="item.imgUrl" />
 				</swiper-item>
 			</swiper>
@@ -281,7 +281,12 @@
 				uni.navigateTo({
 					url: `/pages/product/list?classId=${item}`
 				})
-			}
+			},
+			navTo(url) {
+				uni.navigateTo({
+					url: url
+				})
+			},
 		},
 		// #ifndef MP
 		// 标题栏input搜索框点击

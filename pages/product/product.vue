@@ -54,7 +54,7 @@
 				<text class="con t-r red">领取优惠券</text>
 				<text class="yticon icon-you"></text>
 			</view> -->
-			<view class="c-row b-b">
+			<view class="c-row b-b" v-if="pinkAge">
 				<text class="tit">运费规则</text>
 				<view class="con-list">
 					<text>包邮数量：{{pinkAge}}件</text>
@@ -164,7 +164,7 @@
 		<uni-popup ref="sharepopup" type="bottom">
 			<share-btn :sharedataTemp="sharedata"></share-btn>
 		</uni-popup>
-		
+
 		<!-- 分享组件 -->
 		<shareGuide v-model="showShare"></shareGuide>
 	</view>
@@ -194,7 +194,7 @@
 		},
 		data() {
 			return {
-				showShare:false,
+				showShare: false,
 				maxGoodNum: 1,
 				dialogType: null,
 				shopcarNum: 0,
@@ -330,15 +330,15 @@
 					that.deliveryTime = deliveryTime;
 
 					let imgUrl = response.img
-					
+
 					that.deliveryFee = response.deliveryFee
 					that.pinkAge = response.pinkAge
-					
+
 
 					//分享
 					that.sharedata = {
 						type: 1,
-						strShareUrl: "https://www.ricebuy.cn/#/pages/product/product?id=" + id,
+						strShareUrl: "https://www.ricebuy.cn/pages/product/product?id=" + id,
 						strShareTitle: goodName,
 						strShareSummary: "我在【灵犀】发现了超值的【" + goodName + "】,推荐给你，一起省钱吧~",
 						strShareImageUrl: "http://yuns.ricebuy.cn/" + imgUrl
@@ -389,13 +389,14 @@
 						this.goodDetailImg = item.imageUrl;
 					}
 				})
-
 			},
 			//分享
 			share() {
 				// this.$refs.share.toggleMask();
-				sdk.share(this.sharedata)
-				this.showShare = true;
+				var that = this
+				sdk.share(this.sharedata, function(e) {
+					that.showShare = true;
+				})
 			},
 			//收藏
 			toFavorite() {

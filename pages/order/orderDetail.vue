@@ -29,7 +29,7 @@
 			</view>
 			<view class="yt-list-cell b-b">
 				<text class="cell-tit clamp">运费</text>
-				<text v-if="totalDeliveryFee === 0" class="cell-tip">免运费</text>
+				<text v-if="!totalDeliveryFee || totalDeliveryFee === 0" class="cell-tip">免运费</text>
 				<text v-else class="cell-tip" style="color: #CF2D28;">￥{{totalDeliveryFee}}</text>
 			</view>
 			<view class="yt-list-cell b-b">

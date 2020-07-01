@@ -63,6 +63,9 @@
     },
     "h5" : {
         "title" : "灵犀严选",
-        "domain" : "www.ricebuy.cn"
+        "domain" : "www.ricebuy.cn",
+        "router" : {
+            "mode" : "history"
+        }
     }
 }

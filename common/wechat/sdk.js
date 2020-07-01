@@ -62,7 +62,6 @@ export default {
 			return;
 		}
 		this.initJssdk(function(res) {
-			console.log(data)
 			jweixin.ready(function() {
 				var shareData = {
 					title: data.strShareTitle,
@@ -70,10 +69,10 @@ export default {
 					link: data.strShareUrl,
 					imgUrl: data.strShareImageUrl,
 					success: function(res) {
+						callback(res)
 					},
 					cancel: function(res) {}
 				};
-				console.log(shareData)
 				jweixin.updateAppMessageShareData(shareData);
 				//分享到朋友圈接口
 				jweixin.updateTimelineShareData(shareData);

@@ -2,10 +2,10 @@
 	<view class="container">
 
 		<view class="user-section">
-			<image class="bg" src="/static/background.jpg"></image>
+			<image class="bg" src="/static/group_detail_bg.png"></image>
 			<view class="user-info-box">
 				<view class="portrait-box">
-					<image class="portrait" src='/static/missing-face.png'></image>
+					<image class="portrait" :src='!headImg?"/static/missing-face.png":headImg'></image>
 				</view>
 				<view class="info-box">
 					<text class="username">{{accountName || '游客'}}</text>
@@ -28,6 +28,11 @@
 			}]"
 		 @touchstart="coverTouchstart" @touchmove="coverTouchmove" @touchend="coverTouchend">
 			<image class="arc" src="/static/arc.png"></image>
+
+			<view class="notice-box tj-sction" v-if="!isWxBind || isWxBind === 'N'">
+				<view class="notice-detail one-t" style="font-size: 15px;line-height: 25px;">为了账户安全，请绑定微信用户！</view>
+				<button class="bindPhone " style="margin-right: 5px; line-height: 25px;" @tap="bindWx()">去绑定</button>
+			</view>
 
 			<view class="tj-sction">
 				<view class="tj-item">
@@ -95,6 +100,8 @@
 <script>
 	import listCell from '@/components/mix-list-cell';
 	import commonJs from '@/common/common.js'
+	import wechat from '@/common/wechat/wechat';
+
 	import {
 		mapState
 	} from 'vuex';
@@ -112,6 +119,22 @@
 				moving: false,
 				accountName: '',
 				accountRemain: 0,
+				isWxBind: 'N',
+				headImg: ''
+			}
+		},
+		onLoad(options) {
+			let code = options.code;
+			if (code) {
+				var that = this;
+				this.$http.post(this.$httpApi.user.wxBind, {
+					"code": code
+				}).then(function(response) {
+					//这里只会在接口是成功状态返回
+					that.loanUserInfo();
+				}).catch(function(error) {
+					console.log(error);
+				});
 			}
 		},
 		onShow() {
@@ -119,7 +142,7 @@
 				this.loanUserInfo();
 			} else {
 				this.accountName = '',
-				this.accountRemain = 0
+					this.accountRemain = 0
 			}
 		},
 		// #ifndef MP
@@ -153,6 +176,8 @@
 					//这里只会在接口是成功状态返回
 					that.accountName = response.name;
 					that.accountRemain = response.remain;
+					that.headImg = response.headImg;
+					that.isWxBind = response.isWxBind;
 				}).catch(function(error) {
 					//这里只会在接口是失败状态返回，不需要去处理错误提示
 				});
@@ -209,6 +234,14 @@
 				this.moving = false;
 				this.coverTransition = 'transform 0.3s cubic-bezier(.21,1.93,.53,.64)';
 				this.coverTransform = 'translateY(0px)';
+			},
+			bindWx() {
+				if (!this.hasLogin) {
+					commonJs.showUnloginModal()
+					return
+				}
+				let oUrl = window.location.href;
+				let token = wechat.login(oUrl);
 			}
 		}
 	}
@@ -411,6 +444,31 @@
 				margin-right: 20upx;
 				border-radius: 10upx;
 			}
+		}
+	}
+
+	// 绑定微信公众号
+	.notice-box {
+		background: rgba(253, 239, 216, 1);
+		padding: 5px 35rpx;
+
+		.notice-detail {
+			font-size: 24rpx;
+			font-family: PingFang SC;
+			font-weight: 400;
+			color: rgba(204, 149, 59, 1);
+		}
+
+		.bindPhone {
+			width: 135rpx;
+			height: 52rpx;
+			background: linear-gradient(90deg, rgba(233, 180, 97, 1), rgba(238, 204, 137, 1));
+			border-radius: 26rpx;
+			padding: 0;
+			font-size: 26rpx;
+			font-family: PingFang SC;
+			font-weight: 500;
+			color: rgba(255, 255, 255, 1);
 		}
 	}
 </style>

@@ -76,7 +76,7 @@
 			</view> -->
 			<view class="yt-list-cell b-b">
 				<text class="cell-tit clamp">运费</text>
-				<text v-if="allDeliveryFee === 0" class="cell-tip">免运费</text>
+				<text v-if="!allDeliveryFee || allDeliveryFee === 0" class="cell-tip">免运费</text>
 				<text v-else class="cell-tip" style="color: #CF2D28;">￥{{allDeliveryFee}}</text>
 			</view>
 			<view class="yt-list-cell desc-cell">

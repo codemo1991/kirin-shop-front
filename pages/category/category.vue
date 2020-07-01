@@ -325,9 +325,8 @@
 				// Promise 为 ES6 新增的API ，有疑问的请自行学习该方法的使用。
 				new Promise((resolve, reject) => {
 					/* 因无真实数据，当前方法模拟数据。正式项目中将此处替换为 数据请求即可 */
-					uni.showLoading();
 					var that = this;
-					this.$http.get(this.$httpApi.goods.category, {}).
+					this.$http.get(this.$httpApi.goods.category, {},{load:false}).
 					then(function(response) {
 						let [left, main] = [
 							[],
@@ -367,10 +366,6 @@
 					});
 
 				}).then((res) => {
-					console.log('-----------请求接口返回数据示例-------------');
-					console.log(res);
-
-					uni.hideLoading();
 					this.leftArray = res.left;
 					this.mainArray = res.main;
 				});
