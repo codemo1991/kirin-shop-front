@@ -1,5 +1,9 @@
 <template>
 	<view class="container">
+		<view class="list-cell b-b m-t"  hover-class="cell-hover" :hover-stay-time="50" @click="resetPwd()">
+			<text class="cell-tit">修改密码</text>
+			<text class="cell-more yticon icon-you"></text>
+		</view>
 		<view class="list-cell b-b m-t"  hover-class="cell-hover" :hover-stay-time="50">
 			<text class="cell-tit">个人资料</text>
 			<text class="cell-more yticon icon-you"></text>
@@ -13,7 +17,7 @@
 			<text class="cell-more yticon icon-you"></text>
 		</view>
 		
-		<view class="list-cell m-t b-b"  hover-class="cell-hover" :hover-stay-time="50">
+		<view class="list-cell m-t b-b"  hover-class="cell-hover" :hover-stay-time="50" @click="clear()">
 			<text class="cell-tit">清除缓存</text>
 			<text class="cell-more yticon icon-you"></text>
 		</view>
@@ -31,6 +35,9 @@
 </template>
 
 <script>
+	import HttpCache from '../../common/cache.js'
+	import commonJs from '@/common/common.js'
+	
 	import {  
 	    mapMutations,
 		mapState
@@ -57,7 +64,7 @@
 				    }
 				});
 			},
-			async toLogOut() {
+			toLogOut() {
 				var that = this;
 				this.$http.post(this.$httpApi.user.logout, {
 				}).then(function(response) {
@@ -76,6 +83,22 @@
 					url
 				})
 			},
+			resetPwd(){
+				if(!this.hasLogin){
+					commonJs.showUnloginModal()
+				}
+				uni.navigateTo({
+					url: "/pages/set/resetPwd"
+				})
+				
+			},
+			clear(){
+				HttpCache.remove("user_account");
+				this.$api.msg("清除成功");
+				if(this.hasLogin){
+					this.toLogOut();
+				}
+			}
 		}
 	}
 </script>

@@ -44,7 +44,8 @@ module.exports = {
 	},
 	my: {
 		account: "my/myInfo", //我的
-		waterBill: "my/showWaterBill" //我的流水
+		waterBill: "my/showWaterBill",//我的流水
+		resetPwd: "my/resetPwd",//重置密码
 	},
 	share: {
 		share: "share/sign" //分享

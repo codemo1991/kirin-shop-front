@@ -219,8 +219,6 @@
 				<text class="price">￥{{item.price}}</text>
 			</view>
 		</view>
-
-
 	</view>
 </template>
 

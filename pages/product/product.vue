@@ -112,7 +112,7 @@
 				<text>购物车</text>
 			</navigator>
 
-			<view class="p-b-btn" :class="{active: favorite}" @click="share">
+			<view class="p-b-btn" :class="{active: favorite}" @click="share()">
 				<text class="yticon icon-share"></text>
 				<text>分享</text>
 			</view>
@@ -338,7 +338,7 @@
 					//分享
 					that.sharedata = {
 						type: 1,
-						strShareUrl: "https://www.ricebuy.cn/pages/product/product?id=" + id,
+						strShareUrl: "https://www.ricebuy.cn/v1/pages/product/product?id=" + id,
 						strShareTitle: goodName,
 						strShareSummary: "我在【灵犀】发现了超值的【" + goodName + "】,推荐给你，一起省钱吧~",
 						strShareImageUrl: "http://yuns.ricebuy.cn/" + imgUrl

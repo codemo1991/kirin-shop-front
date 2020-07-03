@@ -17,7 +17,7 @@ export default {
 	initJssdk: function(callback) {
 		var that = this;
 		http.get(httpApi.share.share, {
-			"url": location.href.split('#')[0]
+			"url": window.location.href.split('#')[0]
 		}).
 		then(function(response) {
 			//这里只会在接口是成功状态返回

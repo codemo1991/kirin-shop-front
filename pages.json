@@ -55,6 +55,12 @@
 				"navigationBarTitleText": "设置"
 			}
 		},
+		{
+			"path": "pages/set/resetPwd",
+			"style": {
+				"navigationBarTitleText": "修改密码"
+			}
+		},
 
 		{
 			"path": "pages/userinfo/userinfo",
