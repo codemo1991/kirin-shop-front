@@ -1,6 +1,6 @@
 {
-    "name" : "dianshang",
-    "appid" : "",
+    "name" : "kirin-shop-front",
+    "appid" : "__UNI__C30BDB3",
     "description" : "",
     "versionName" : "1.0.0",
     "versionCode" : "100",
@@ -48,6 +48,9 @@
             "ios" : {},
             /* ios打包配置 */
             "sdkConfigs" : {}
+        },
+        "uniStatistics" : {
+            "enable" : true
         }
     },
     /* SDK配置 */
@@ -59,6 +62,9 @@
         "appid" : "",
         "setting" : {
             "urlCheck" : true
+        },
+        "uniStatistics" : {
+            "enable" : true
         }
     },
     "h5" : {
@@ -67,6 +73,34 @@
         "router" : {
             "mode" : "history",
             "base" : "/v1/"
+        },
+        "uniStatistics" : {
+            "enable" : true
         }
+    },
+    "uniStatistics" : {
+        "enable" : true
+    },
+    "mp-alipay" : {
+        "uniStatistics" : {
+            "enable" : true
+        },
+        "appid" : "2021001172605360"
+    },
+    "mp-baidu" : {
+        "uniStatistics" : {
+            "enable" : true
+        }
+    },
+    "mp-qq" : {
+        "uniStatistics" : {
+            "enable" : true
+        }
+    },
+    "mp-toutiao" : {
+        "uniStatistics" : {
+            "enable" : true
+        },
+        "appid" : "testappId"
     }
 }

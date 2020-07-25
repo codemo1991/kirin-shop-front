@@ -1,0 +1,7 @@
+{
+  "defaultTitle": "我的流水",
+  "pullRefresh": true,
+  "usingComponents": {
+    "mescroll-body": "/components/mescroll-uni/mescroll-body"
+  }
+}

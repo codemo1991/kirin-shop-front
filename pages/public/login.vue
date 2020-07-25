@@ -16,13 +16,17 @@
 				</view>
 				<view class="input-item">
 					<text class="tit">密码</text>
-					<input type="mobile" value="" placeholder="8-18位不含特殊字符的数字、字母组合" placeholder-class="input-empty" maxlength="20"
+					<input type="mobile" value="" placeholder="6-12位不含特殊字符的数字或字母组合" placeholder-class="input-empty" maxlength="20"
 					 password data-key="password" @input="inputChange" @confirm="toLogin" />
 				</view>
 			</view>
 			<button class="confirm-btn" @click="toLogin" :disabled="logining">登录</button>
-			<view class="forget-section">
+			<!-- <view class="forget-section">
 				忘记密码?
+			</view> -->
+			<view class="forget-section">
+				还没有账号?
+				<text @click="toRegist">去注册</text>
 			</view>
 		</view>
 		
@@ -35,16 +39,14 @@
 			</view>
 		</view>
 		
-		<view class="register-section">
-			还没有账号?
-			<text @click="toRegist">去注册</text>
-		</view>
+		
 	</view>
 </template>
 
 <script>
 	import { mapMutations } from 'vuex';
 	import Wechat from '@/common/wechat/wechat';
+	import h5Copy from '@/js_sdk/junyi-h5-copy/junyi-h5-copy/junyi-h5-copy.js'
 
 	export default {
 		data() {
@@ -57,15 +59,15 @@
 		onLoad(options) {
 			let code = options.code;
 			if(code){
-				this.$api.msg(code)
 				var that = this;
-				this.$http.post(this.$httpApi.user.login, {
+				this.$http.post(this.$httpApi.user.wxLogin, {
 					"code": code
 				}).then(function(response) {
 					//这里只会在接口是成功状态返回
-					
+					that.$api.msg("恭喜你！登录成功!");
+					that.login(response);
 					uni.switchTab({
-						url: `/pages/index/index`
+						url: `/pages/user/user`
 					})
 				}).catch(function(error) {
 					console.log(error);
@@ -82,7 +84,9 @@
 				uni.navigateBack();
 			},
 			toRegist() {
-				this.$api.msg('公测阶段，请联系管理员开通账号');
+				uni.navigateTo({
+					url: `/pages/public/register`
+				})
 			},
 			async toLogin() {
 				this.logining = true;
@@ -108,11 +112,26 @@
 				this.logining = false;
 			},
 			async wxLogin() {
-				this.$api.msg("微信登陆暂时只对公测用户开发，请联系客服");
-				return;
-				let wechat = new Wechat();
-				let token = await wechat.login();
+				// this.$api.msg("微信登陆暂时只对公测用户开开放，请联系客服");
+				// return;
+				let token = await Wechat.login();
 				
+			},
+			//点击客服微信号码
+			copyWx(wxNo) {
+				let content = wxNo // 复制内容，必须字符串，数字需要转换为字符串
+				const result = h5Copy(content)
+				if (result === false) {
+					uni.showToast({
+						title: '不支持复制',
+					})
+				} else {
+					uni.showToast({
+						title: '客服微信号已复制,去微信搜索,添加客服好友吧!',
+						icon: 'none',
+						duration : 4000
+					})
+				}
 			}
 		},
 
@@ -125,7 +144,7 @@
 	}
 
 	.container {
-		padding-top: 115px;
+		padding-top: 45px;
 		position: relative;
 		width: 100vw;
 		height: 100vh;

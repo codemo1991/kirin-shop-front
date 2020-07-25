@@ -29,9 +29,14 @@
 		 @touchstart="coverTouchstart" @touchmove="coverTouchmove" @touchend="coverTouchend">
 			<image class="arc" src="/static/arc.png"></image>
 
-			<view class="notice-box tj-sction" v-if="!isWxBind || isWxBind === 'N'">
-				<view class="notice-detail one-t" style="font-size: 15px;line-height: 25px;">为了账户安全，请绑定微信用户！</view>
+			<view class="notice-box tj-sction" v-if="hasLogin && (!isWxBind || isWxBind === 'N')">
+				<view class="notice-detail one-t" style="font-size: 15px;line-height: 25px;">为了账户安全，请绑定微信！</view>
 				<button class="bindPhone " style="margin-right: 5px; line-height: 25px;" @tap="bindWx()">去绑定</button>
+			</view>
+			
+			<view class="notice-box tj-sction" v-if="hasLogin && (!isPhoneBind || isPhoneBind === 'N')">
+				<view class="notice-detail one-t" style="font-size: 15px;line-height: 25px;">为了账户安全，请绑定手机！</view>
+				<button class="bindPhone " style="margin-right: 5px; line-height: 25px;" @tap="bindPhone()">去绑定</button>
 			</view>
 
 			<view class="tj-sction">
@@ -87,9 +92,10 @@
 					<image @click="navTo('/pages/product/product')" src="https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=191678693,2701202375&fm=26&gp=0.jpg"
 					 mode="aspectFill"></image>
 				</scroll-view> -->
+				<list-cell icon="icon-share" iconColor="#9789f7" title="联系客服" tips="商品咨询/系统注册" @eventClick="copyWx('sad535445345')"></list-cell>
 				<list-cell icon="icon-iconfontweixin" iconColor="#e07472" title="我的账单" tips="您的资金流水明细" @eventClick="navTo('/pages/money/waterBill')"></list-cell>
 				<list-cell icon="icon-dizhi" iconColor="#5fcda2" title="地址管理" @eventClick="navTo('/pages/address/address')"></list-cell>
-				<list-cell icon="icon-share" iconColor="#9789f7" title="分享" tips="邀请好友赢10万大礼"></list-cell>
+				<!-- <list-cell icon="icon-share" iconColor="#9789f7" title="分享" tips="邀请好友赢10万大礼"></list-cell> -->
 				<list-cell icon="icon-shezhi1" iconColor="#e07472" title="去登录" v-if="hasLogin == false" @eventClick="navTo('/pages/public/login',1)"></list-cell>
 			</view>
 		</view>
@@ -101,6 +107,7 @@
 	import listCell from '@/components/mix-list-cell';
 	import commonJs from '@/common/common.js'
 	import wechat from '@/common/wechat/wechat';
+	import h5Copy from '@/js_sdk/junyi-h5-copy/junyi-h5-copy/junyi-h5-copy.js'
 
 	import {
 		mapState
@@ -120,6 +127,7 @@
 				accountName: '',
 				accountRemain: 0,
 				isWxBind: 'N',
+				isPhoneBind: 'N',
 				headImg: ''
 			}
 		},
@@ -178,6 +186,7 @@
 					that.accountRemain = response.remain;
 					that.headImg = response.headImg;
 					that.isWxBind = response.isWxBind;
+					that.isPhoneBind = response.isPhoneBind;
 				}).catch(function(error) {
 					//这里只会在接口是失败状态返回，不需要去处理错误提示
 				});
@@ -242,6 +251,31 @@
 				}
 				let oUrl = window.location.href;
 				let token = wechat.login(oUrl);
+			},
+			//点击客服微信号码
+			copyWx(wxNo) {
+				let content = wxNo // 复制内容，必须字符串，数字需要转换为字符串
+				const result = h5Copy(content)
+				if (result === false) {
+					uni.showToast({
+						title: '不支持复制',
+					})
+				} else {
+					uni.showToast({
+						title: '客服微信号已复制,去微信搜索,添加客服好友吧!',
+						icon: 'none',
+						duration : 4000
+					})
+				}
+			},
+			bindPhone(){
+				if (!this.hasLogin) {
+					commonJs.showUnloginModal()
+					return
+				}
+				uni.navigateTo({
+					url: `/pages/user/phoneBind`
+				})
 			}
 		}
 	}

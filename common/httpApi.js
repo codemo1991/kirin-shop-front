@@ -21,6 +21,9 @@ module.exports = {
 		account: "my/myInfo", //用户信息
 		logout: "login/userLogout", //用户退出
 		wxBind: "login/wxBind", //微信绑定
+		sendSms:"login/sendSmsCode",//发送验证码
+		register:"login/register",//注册
+		wxLogin:"login/wxLogin",//微信登陆
 
 	},
 	shopcar: {
@@ -46,6 +49,7 @@ module.exports = {
 		account: "my/myInfo", //我的
 		waterBill: "my/showWaterBill",//我的流水
 		resetPwd: "my/resetPwd",//重置密码
+		phoneBind: "my/phoneBind",//绑定手机号码
 	},
 	share: {
 		share: "share/sign" //分享

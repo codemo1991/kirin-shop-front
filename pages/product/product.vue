@@ -19,7 +19,7 @@
 				<!-- <text class="coupon-tip">7折</text> -->
 			</view>
 			<view class="bot-row">
-				<text>销量: {{sold}}</text>
+				<text>销量: {{soldTemp}}</text>
 				<text>库存: {{store}}</text>
 				<text>热度: 100 </text>
 			</view>
@@ -228,7 +228,8 @@
 					strShareTitle: "",
 					strShareSummary: "",
 					strShareImageUrl: ""
-				}
+				},
+				soldTemp:0
 			};
 		},
 		async onLoad(options) {
@@ -248,6 +249,8 @@
 					}
 				}
 			})
+			
+			this.soldTemp = '23' + Math.floor(Math.random() * 10 );
 		},
 		methods: {
 			add2CarToggleSpec() {
