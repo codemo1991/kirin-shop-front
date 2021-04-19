@@ -5,6 +5,8 @@ import Json from './Json' //测试用数据
 import $http from 'js_sdk/zhouWei-request/requestConfig';
 import httpApi from './common/httpApi'
 import HttpCache from './common/cache'
+import orangeUtil from 'js_sdk/orange-util/orange-util.js'; //orange-util.js 所在文件目录
+Vue.use(orangeUtil);
 
 // 注册全局组件
 import MescrollBody from "@/components/mescroll-uni/mescroll-body.vue"

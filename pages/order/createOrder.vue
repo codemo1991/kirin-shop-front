@@ -163,6 +163,7 @@
 					return;
 				}
 				this.orderData["addressData"] = this.addressData;
+				this.orderData["toid"] = this.$util.uuid();
 				uni.redirectTo({
 					url: `/pages/money/pay?data=${JSON.stringify({
 						orderTemp: this.orderData

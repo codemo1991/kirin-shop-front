@@ -30,8 +30,7 @@
 		<!-- 分类 -->
 		<view v-for="(item,index) in  menuList" :key="index">
 			<view class="cate-section">
-				<view class="cate-item" v-for="(item2,index2) in item" :key="index2"
-				@click="navToListPage(item2.cateId)">
+				<view class="cate-item" v-for="(item2,index2) in item" :key="index2" @click="navToListPage(item2.cateId)">
 					<image :src="item2.imgUrl"></image>
 					<text>{{item2.name}}</text>
 				</view>
@@ -42,13 +41,13 @@
 		</view> -->
 
 		<!-- 秒杀楼层 -->
-		<!-- <view class="seckill-section m-t">
+		<view class="seckill-section m-t">
 			<view class="s-header">
 				<image class="s-img" src="/static/temp/secskill-img.jpg" mode="widthFix"></image>
-				<text class="tip">8点场</text>
+				<!-- <text class="tip">8点场</text>
 				<text class="hour timer">07</text>
 				<text class="minute timer">13</text>
-				<text class="second timer">55</text>
+				<text class="second timer">55</text> -->
 				<text class="yticon icon-you"></text>
 			</view>
 			<scroll-view class="floor-list" scroll-x>
@@ -58,16 +57,16 @@
 						class="floor-item"
 						@click="navToDetailPage(item)"
 					>
-						<image :src="item.image" mode="aspectFill"></image>
-						<text class="title clamp">{{item.title}}</text>
+						<image :src="item.imgUrl" mode="aspectFill"></image>
+						<text class="title clamp">{{item.goodName}}</text>
 						<text class="price">￥{{item.price}}</text>
 					</view>
 				</view>
 			</scroll-view>
-		</view> -->
-
+		</view> 
+		
 		<!-- 团购楼层 -->
-		<!-- <view class="f-header m-t">
+		 <!-- <view class="f-header m-t">
 			<image src="/static/temp/h1.png"></image>
 			<view class="tit-box">
 				<text class="tit">精品团购</text>
@@ -120,7 +119,7 @@
 				</swiper-item>
 
 			</swiper>
-		</view> -->
+		</view>
 
 
 
@@ -219,6 +218,11 @@
 				<text class="price">￥{{item.price}}</text>
 			</view>
 		</view>
+
+		<view>
+			<Pengpai-FadeInOut :duration="2600" :wait="3000" :top="100" :left="10" :radius="30" :loop="true" :list="list"></Pengpai-FadeInOut>
+		</view>
+
 	</view>
 </template>
 
@@ -233,6 +237,28 @@
 				carouselList: [],
 				goodsList: [],
 				menuList: [],
+				list: [
+					{
+						title: '踮起脚尖走向阳光 刚刚浏览分享了纸尿裤',
+						img: 'https://wx.qlogo.cn/mmopen/vi_32/DYAIOgq83er0aq5WuQhWxXcQoQbSnSPywUheQrot5biaFxV47nF2OB0aegkH12q2A6VkGUBDfUVqiaqgzVCJJicDg/132'
+					},
+					{
+						title: '幸福的小女人  刚刚浏览了婴乐霜',
+						img: 'https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTIOeUhleCNwcOoTtk9Y1zwmpw76FsmAr1bYcKia2AVPiapbtl34jac7SQgjMaibKDJCqjYaHwvmUh3IQ/132'
+					},
+					{
+						title: '快乐天使  购买了婴乐霜',
+						img: 'https://wx.qlogo.cn/mmopen/vi_32/OaXz0rjMsrHkZlfxeEqRhhUCKyaXyVSbCQZWFUeZQuUetKhbQRZiclqNQhFfv3yiclOzTl1FgZdjDpwAFG5gDhBg/132'
+					},
+					{
+						title: '握不住的沙  刚刚浏览了超赞',
+						img: 'https://wx.qlogo.cn/mmopen/vi_32/bVfMeCPxSQsfBRc1XFHiaAiaZvvdrXC9hMTWAHoqDZKk7HD2By7km1dc55eSEibibKwDaW3ZQ2Zcbccr4KzwILVquQ/132'
+					},
+					{
+						title: '顺其自然  刚刚购买了柔贝儿',
+						img: 'https://thirdwx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTJghoO6zuibOUG6AMubJJIUicbbWjyOyljFr4QVZecvRqEhHfkIribPfEyfxiaKY5MpiaAeVjvokLLATDw/132'
+					}
+				]
 			};
 		},
 		onShow() {
@@ -252,7 +278,7 @@
 
 					let goodsList = response.recGoods;
 					that.goodsList = goodsList || [];
-					
+
 					let goodMenus = response.goodMenus;
 					that.menuList = goodMenus || [];
 
@@ -275,7 +301,7 @@
 				})
 			},
 			//分类列表
-			navToListPage(item){
+			navToListPage(item) {
 				uni.navigateTo({
 					url: `/pages/product/list?classId=${item}`
 				})
@@ -760,25 +786,28 @@
 	.guess-section {
 		display: flex;
 		flex-wrap: wrap;
-		padding: 0 30upx;
+		padding: 0 25upx;
 		background: #fff;
 
 		.guess-item {
 			display: flex;
 			flex-direction: column;
-			width: 48%;
-			padding-bottom: 40upx;
+			width: 30%;
+			padding-bottom: 30upx;
+			
 
-			&:nth-child(2n+1) {
-				margin-right: 4%;
+			&:nth-child(3n+2) {
+				margin-right:30upx;
+				margin-left:30upx;
 			}
 		}
 
 		.image-wrapper {
 			width: 100%;
-			height: 330upx;
+			height: 220upx;
 			border-radius: 3px;
 			overflow: hidden;
+			border-radius:10px;
 
 			image {
 				width: 100%;
@@ -788,13 +817,13 @@
 		}
 
 		.title {
-			font-size: $font-lg;
+			font-size: 25upx;
 			color: $font-color-dark;
-			line-height: 80upx;
+			line-height: 50upx;
 		}
 
 		.price {
-			font-size: $font-lg;
+			font-size: 25upx;
 			color: $uni-color-primary;
 			line-height: 1;
 		}

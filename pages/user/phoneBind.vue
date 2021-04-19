@@ -115,7 +115,7 @@
 				
 				if(this.codeBtn.waitingCode){
 					var that = this;
-					this.$http.post(this.$httpApi.user.sendSms, {
+					this.$http.get(this.$httpApi.user.sendSms, {
 						"phone": that.mobile,
 					}).then(function(response) {
 						//这里只会在接口是成功状态返回

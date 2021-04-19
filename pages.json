@@ -5,7 +5,7 @@
 			"path": "pages/index/index",
 			"style": {
 				// #ifdef MP 
-				"navigationBarTitleText": "灵犀严选",
+				"navigationBarTitleText": "云商乐购",
 				//"navigationStyle": "custom",
 				// #endif 
 				"app-plus": {
@@ -185,6 +185,12 @@
 			"style": {
 				"navigationBarTitleText": "支付成功"
 			}
+		},
+		{
+			"path": "pages/money/payFail",
+			"style": {
+				"navigationBarTitleText": "支付失败"
+			}
 		}
 	    ,{
             "path" : "pages/notice/notice",
@@ -192,16 +198,27 @@
 				"navigationBarTitleText": "通知"
 			}
         }
-        ,{
-            "path" : "pages/category/category",
-            "style" : {
+        ,
+		// {
+  //           "path" : "pages/category/category",
+  //           "style" : {
+		// 		"navigationBarTitleText": "分类",
+		// 		"navigationStyle": "custom",
+		// 		"app-plus": {
+		// 			"bounce": "none"
+		// 		}
+		// 	}
+  //       },
+		{
+		    "path" : "pages/category/classify",
+		    "style" : {
 				"navigationBarTitleText": "分类",
 				"navigationStyle": "custom",
 				"app-plus": {
 					"bounce": "none"
 				}
 			}
-        }
+		}
         ,{
             "path" : "pages/product/list",
             "style" : {
@@ -212,7 +229,7 @@
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
-		"navigationBarTitleText": "灵犀严选",
+		"navigationBarTitleText": "妈妈医选",
 		"navigationBarBackgroundColor": "#FFFFFF",
 		"backgroundColor": "#f8f8f8"
 	},
@@ -228,10 +245,10 @@
 				"text": "首页"
 			},
 			{
-				"pagePath": "pages/category/category",
+				"pagePath": "pages/category/classify",
 				"iconPath": "static/tab-cate.png",
 				"selectedIconPath": "static/tab-cate-current.png",
-				"text": "分类"
+				"text": "闪购"
 			},
 			{
 				"pagePath": "pages/cart/cart",

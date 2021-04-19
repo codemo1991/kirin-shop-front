@@ -68,7 +68,7 @@
         }
     },
     "h5" : {
-        "title" : "灵犀严选",
+        "title" : "时节",
         "domain" : "www.ricebuy.cn/v1",
         "router" : {
             "mode" : "history",

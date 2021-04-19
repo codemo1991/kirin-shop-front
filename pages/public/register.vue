@@ -7,7 +7,7 @@
 		<view class="wrapper">
 			<view class="left-top-sign">LOGIN</view>
 			<view class="welcome">
-				欢迎加入灵犀严选！
+				欢迎加入云商乐购！
 			</view>
 			<view class="input-content">
 				<view class="input-item">
@@ -37,6 +37,8 @@
 	import { mapMutations } from 'vuex';
 	import Wechat from '@/common/wechat/wechat';
 	import h5Copy from '@/js_sdk/junyi-h5-copy/junyi-h5-copy/junyi-h5-copy.js'
+	import { getUrlParam } from "@/common/common.js";
+
 
 	export default {
 		data() {
@@ -45,6 +47,7 @@
 				password: '',
 				smsCode: '',
 				logining: false,
+				referrerId:"",
 				seconds: 60,
 				codeBtn: {
 					text: '获取验证码',
@@ -66,6 +69,8 @@
 				uni.navigateBack();
 			},
 			toRegist() {
+				
+				this.referrerId = getUrlParam("referrerId");
 				if(!this.mobile){
 					this.$api.msg("手机号码不能为空");
 					return;
@@ -75,18 +80,19 @@
 					this.$api.msg("密码不能为空");
 					return;
 				}
-				console.log(this.smsCode)
+				
 				if(!this.smsCode){
 					this.$api.msg("验证码不能为空");
 					return;
 				}
-
+				
 				this.logining = true;
 				var that = this;
 				this.$http.post(this.$httpApi.user.register, {
 					"phone": that.mobile,
 					"password": that.password,
-					"code":that.smsCode
+					"code":that.smsCode,
+					"referrerId":that.referrerId
 				}, {
 					header: {
 						'content-type': 'application/x-www-form-urlencoded'
@@ -116,7 +122,7 @@
 				
 				if(this.codeBtn.waitingCode){
 					var that = this;
-					this.$http.post(this.$httpApi.user.sendSms, {
+					this.$http.get(this.$httpApi.user.sendSms, {
 						"phone": that.mobile,
 					}).then(function(response) {
 						//这里只会在接口是成功状态返回

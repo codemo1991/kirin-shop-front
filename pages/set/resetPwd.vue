@@ -59,7 +59,7 @@ import {
 					this.$api.msg("两次输入密码不正确");
 					return;
 				}
-				let reqData = {"oPwd":this.oldPwd, "newPwd":this.newPwd}
+				let reqData = {"oldPwd":this.oldPwd, "newPwd":this.newPwd}
 				var that = this;
 				this.$http.post(this.$httpApi.my.resetPwd, reqData).then(function(response) {
 					that.$api.msg("修改密码成功,请重新登录");

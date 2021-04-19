@@ -2,7 +2,7 @@ import request from "./request";
 import HttpCache from '../../common/cache.js'
 
 let baseUrl = "https://www.ricebuy.cn/backend/";
-// let baseUrl = "http://127.0.0.1:8081/";
+// let baseUrl = "http://127.0.0.1:8082/";
 
 //可以new多个request来支持多个域名请求
 let $http = new request({

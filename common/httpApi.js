@@ -3,55 +3,58 @@
  */
 module.exports = {
 	home: {
-		banner: "main/indexBaseInfo", // 首页banner 
-		navlist: "index/navlist", // 首页导航
+		banner: "front/index/indexBaseInfo", // 首页banner 
+		navlist: "front/index/navlist", // 首页导航
 	},
 	common: {
-		couponlist: "index/couponlist", // 公共加载商品
-		config: "config/getinfo", // 获取服务端配置
-		update: "config/update", // 检测更新 
+		couponlist: "front/index/couponlist", // 公共加载商品
+		config: "front/config/getinfo", // 获取服务端配置
+		update: "front/config/update", // 检测更新 
 	},
 	goods: {
-		iteminfo: "goods/goodDetail", // 商品详情 加载 
-		category: "goods/category", // 商品目录 加载
-		goodList: "goods/goodList"
+		iteminfo: "front/goods/goodDetail", // 商品详情 加载 
+		category: "front/goods/category", // 商品目录 加载
+		goodList: "front/goods/goodList",
+		classify: "front/goods/goodClassify", // 商品目录 加载
 	},
 	user: {
-		login: "login/userLogin", //用户登录
-		account: "my/myInfo", //用户信息
-		logout: "login/userLogout", //用户退出
-		wxBind: "login/wxBind", //微信绑定
-		sendSms:"login/sendSmsCode",//发送验证码
-		register:"login/register",//注册
-		wxLogin:"login/wxLogin",//微信登陆
+		login: "front/login/signIn", //用户登录
+		account: "front/my/myInfo", //用户信息
+		logout: "front/login/signOut", //用户退出
+		wxBind: "front/login/wxBind", //微信绑定
+		sendSms:"front/sms/sendSmsCode",//发送验证码
+		register:"front/login/register",//注册
+		wxLogin:"front/login/wxLogin",//微信登陆
 
 	},
 	shopcar: {
-		add2shopCar: "shopCar/addShopCar", //添加到购物车
-		getShopCarNum: "shopCar/getShopCarNum", //获取购物车商品数量
-		showShopCar: "shopCar/showShopCar", //查看购物车
-		delShopCar: "shopCar/delShopCar", //删除购物车商品
+		add2shopCar: "front/shopCar/addShopCar", //添加到购物车
+		getShopCarNum: "front/shopCar/getShopCarNum", //获取购物车商品数量
+		showShopCar: "front/shopCar/showShopCar", //查看购物车
+		delShopCar: "front/shopCar/delShopCar", //删除购物车商品
 	},
 	address: {
-		defaultAddr: "address/showDefaultAddress", //查看默认地址
-		showAddr: "address/showAddresses", //返回地址列表
-		delAddr: "address/deleteAddress", //删除地址
-		addAddr: "address/addAddress", //添加地址
+		defaultAddr: "front/address/showDefaultAddress", //查看默认地址
+		showAddr: "front/address/showAddresses", //返回地址列表
+		delAddr: "front/address/deleteAddress", //删除地址
+		addAddr: "front/address/addAddress", //添加地址
 	},
 	order: {
-		makeOrder: "order/order", //下单
-		showOrder: "order/showOrder", //查看订单列表
-		showOrderDetail: "order/showOrderByOid", //查看订单详情
-		cancelOrder: "order/cancelOrder", //取消订单
-		orderOperate: "order/orderOperate" //订单催单、申请退单动作
+		makeOrder: "front/order/order", //下单
+		showOrder: "front/order/showOrder", //查看订单列表
+		showOrderDetail: "front/order/showOrderByOid", //查看订单详情
+		orderOperate: "front/order/orderOperate" //订单催单、申请退单动作
 	},
 	my: {
-		account: "my/myInfo", //我的
-		waterBill: "my/showWaterBill",//我的流水
-		resetPwd: "my/resetPwd",//重置密码
-		phoneBind: "my/phoneBind",//绑定手机号码
+		account: "front/my/myInfo", //我的
+		waterBill: "front/my/showWaterBill",//我的流水
+		resetPwd: "front/my/resetPwd",//重置密码
+		phoneBind: "front/my/phoneBind",//绑定手机号码
 	},
 	share: {
-		share: "share/sign" //分享
+		share: "front/share/sign" //分享
+	},
+	pay:{
+		pay: "front/pay/order" ,//微信预付
 	}
 }

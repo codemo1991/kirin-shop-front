@@ -18,6 +18,8 @@ export default {
 		var that = this;
 		http.get(httpApi.share.share, {
 			"url": window.location.href.split('#')[0]
+			// "url": "https://www.ricebuy.cn/v1"
+			
 		}).
 		then(function(response) {
 			//这里只会在接口是成功状态返回
@@ -75,7 +77,7 @@ export default {
 				};
 				jweixin.updateAppMessageShareData(shareData);
 				//分享到朋友圈接口
-				jweixin.updateTimelineShareData(shareData);
+				// jweixin.updateTimelineShareData(shareData);
 			});
 		});
 
@@ -117,7 +119,12 @@ export default {
 	wxpay: function(data, callback) {
 		let that = this;
 		if (!this.isWechat()) {
-			//console.log('不是微信客户端')
+			console.log("不是微信客户端")
+			uni.showToast({
+			title: '请在微信客户端打开',
+			icon:'none',
+			duration: 2000
+			});
 			return;
 		}
 		this.initJssdk(function(res) {
@@ -129,10 +136,10 @@ export default {
 					signType: data.signType, // 签名方式，默认为'SHA1'，使用新版支付需传入'MD5'
 					paySign: data.paySign, // 支付签名
 					success: function(res) {
-						callback(res)
+						callback(1,res)
 					},
 					fail: function(res) {
-						callback(res)
+						callback(0,res)
 					},
 					cancel: function(res) {
 						that.tools.toast('取消支付')

@@ -3,30 +3,31 @@
 
 		<view class="user-section">
 			<image class="bg" src="/static/group_detail_bg.png"></image>
-			<view class="user-info-box">
+			<view class="user-info-box" @tap="navTo('/pages/public/login',1)">
 				<view class="portrait-box">
 					<image class="portrait" :src='!headImg?"/static/missing-face.png":headImg'></image>
 				</view>
 				<view class="info-box">
-					<text class="username">{{accountName || '游客'}}</text>
+					<text  class="username">{{accountName || '点击登录'}}</text>
 				</view>
 			</view>
 			<view class="vip-card-box">
 				<image class="card-bg" src="" mode=""></image>
 				<view class="tit">
 					<text class="yticon icon-iLinkapp-"></text>
-					灵犀严选会员
+					云商乐购商城
 				</view>
-				<text class="e-m">灵犀严选联盟</text>
-				<text class="e-b">开通会员尊享折扣</text>
+				<text class="e-m"></text>
+				<text class="e-b"></text>
 			</view>
 		</view>
 
+<!-- @touchstart="coverTouchstart" @touchmove="coverTouchmove" @touchend="coverTouchend" -->
 		<view class="cover-container" :style="[{
 				transform: coverTransform,
 				transition: coverTransition
 			}]"
-		 @touchstart="coverTouchstart" @touchmove="coverTouchmove" @touchend="coverTouchend">
+		 >
 			<image class="arc" src="/static/arc.png"></image>
 
 			<view class="notice-box tj-sction" v-if="hasLogin && (!isWxBind || isWxBind === 'N')">
@@ -94,8 +95,8 @@
 				</scroll-view> -->
 				<list-cell icon="icon-share" iconColor="#9789f7" title="联系客服" tips="商品咨询/系统注册" @eventClick="copyWx('sad535445345')"></list-cell>
 				<list-cell icon="icon-iconfontweixin" iconColor="#e07472" title="我的账单" tips="您的资金流水明细" @eventClick="navTo('/pages/money/waterBill')"></list-cell>
-				<list-cell icon="icon-dizhi" iconColor="#5fcda2" title="地址管理" @eventClick="navTo('/pages/address/address')"></list-cell>
-				<!-- <list-cell icon="icon-share" iconColor="#9789f7" title="分享" tips="邀请好友赢10万大礼"></list-cell> -->
+				<list-cell icon="icon-dizhi" iconColor="#5fcda2" title="地址管理" tips="收货地址管理" @eventClick="navTo('/pages/address/address')"></list-cell>
+				<list-cell icon="icon-share" iconColor="#9789f7" title="分享" tips="邀请好友更多优惠" v-if="hasLogin"></list-cell>
 				<list-cell icon="icon-shezhi1" iconColor="#e07472" title="去登录" v-if="hasLogin == false" @eventClick="navTo('/pages/public/login',1)"></list-cell>
 			</view>
 		</view>
@@ -105,9 +106,10 @@
 </template>
 <script>
 	import listCell from '@/components/mix-list-cell';
-	import commonJs from '@/common/common.js'
+	import commonJs from '@/common/common.js';
 	import wechat from '@/common/wechat/wechat';
-	import h5Copy from '@/js_sdk/junyi-h5-copy/junyi-h5-copy/junyi-h5-copy.js'
+	import h5Copy from '@/js_sdk/junyi-h5-copy/junyi-h5-copy/junyi-h5-copy.js';
+	import { mapMutations } from 'vuex';
 
 	import {
 		mapState
@@ -135,10 +137,12 @@
 			let code = options.code;
 			if (code) {
 				var that = this;
-				this.$http.post(this.$httpApi.user.wxBind, {
+				this.$http.post(this.$httpApi.user.wxLogin, {
 					"code": code
 				}).then(function(response) {
 					//这里只会在接口是成功状态返回
+					that.$api.msg("登录成功!");
+					that.login(response);
 					that.loanUserInfo();
 				}).catch(function(error) {
 					console.log(error);
@@ -177,6 +181,7 @@
 			...mapState(['hasLogin', 'userInfo'])
 		},
 		methods: {
+			...mapMutations(['login']),
 			loanUserInfo() {
 				var that = this;
 				this.$http.get(this.$httpApi.my.account, {}).

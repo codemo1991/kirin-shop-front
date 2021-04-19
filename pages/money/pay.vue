@@ -7,7 +7,7 @@
 
 		<view class="pay-type-list">
 
-			<!-- <view class="type-item b-b" @click="changePayType(2)">
+			<view class="type-item b-b" @click="changePayType(2)">
 				<text class="icon yticon icon-weixinzhifu"></text>
 				<view class="con">
 					<text class="tit">微信支付</text>
@@ -18,7 +18,7 @@
 					</radio>
 				</label>
 			</view>
-			<view class="type-item b-b" @click="changePayType(3)">
+			<!--<view class="type-item b-b" @click="changePayType(3)">
 				<text class="icon yticon icon-alipay"></text>
 				<view class="con">
 					<text class="tit">支付宝支付</text>
@@ -40,27 +40,29 @@
 				</label>
 			</view>
 		</view>
-		
+
 		<text class="mix-btn" @click="confirm">确认支付</text>
 	</view>
 </template>
 
 <script>
-
+	import Wechat from '@/common/wechat/sdk';
+	
 	export default {
 		data() {
 			return {
 				payType: 1,
 				orderInfo: {},
-				goodData:[],
-				totalPrice:0,
-				orderData:{},
-				account:0,
-				addressData:{}
+				goodData: [],
+				totalPrice: 0,
+				orderData: {},
+				account: 0,
+				addressData: {},
+				toid: ''
 			};
 		},
 		computed: {
-		
+
 		},
 		onLoad(option) {
 			this.loadAccountBalance();
@@ -70,6 +72,7 @@
 			this.addressData = data.addressData;
 			this.orderData = data;
 			this.orderType = data.orderType;
+			this.toid = data.toid;
 		},
 
 		methods: {
@@ -86,30 +89,57 @@
 				let orderType = this.orderType;
 				that.goodData.forEach(item => {
 					goodDetails.push(item.goodDetailId),
-					nums.push(item.num)
+						nums.push(item.num)
 				});
-				
+
 				orderInfo["orderType"] = orderType;
 				orderInfo["goodDetailIds"] = goodDetails;
 				orderInfo["nums"] = nums;
 				orderInfo["addressId"] = this.addressData.id;
-				
-				uni.showModal({
-					title: '提示',
-					content: '确认支付？',
-					success: function(res) {
-						that.$http.post(that.$httpApi.order.makeOrder, orderInfo).
-						then(function(response) {
-							uni.redirectTo({
-								url: '/pages/money/paySuccess'
-							})
-						}).catch(function(error) {
-							//这里只会在接口是失败状态返回，不需要去处理错误提示
-						});
-					}
-				});
+				orderInfo["toid"] = this.toid;
+
+				if (this.payType == 1) {
+					uni.showModal({
+						title: '提示',
+						content: '确认余额支付？',
+						success: function(res) {
+							that.$http.post(that.$httpApi.order.makeOrder, orderInfo).
+							then(function(response) {
+								uni.redirectTo({
+									url: '/pages/money/paySuccess'
+								})
+							}).catch(function(error) {
+								//这里只会在接口是失败状态返回，不需要去处理错误提示
+							});
+						}
+					});
+				} else if (this.payType == 2) {
+					uni.showModal({
+						title: '提示',
+						content: '确认微信支付？',
+						success: function(res) {
+							that.$http.post(that.$httpApi.pay.pay, orderInfo).
+							then(function(response) {
+								Wechat.wxpay(response,function(rlt, res){
+									if(rlt == 1){
+										uni.redirectTo({
+											url: '/pages/money/paySuccess'
+										})
+									} else{
+										uni.redirectTo({
+											url: '/pages/money/payFail'
+										})
+									}
+								})
+							}).catch(function(error) {
+								//这里只会在接口是失败状态返回，不需要去处理错误提示
+							});
+						}
+					});
+				}
+
 			},
-			loadAccountBalance(){
+			loadAccountBalance() {
 				var that = this;
 				this.$http.get(this.$httpApi.user.account, {}).
 				then(function(response) {
@@ -138,11 +168,12 @@
 		font-size: 28upx;
 		color: #909399;
 
-		.price{
+		.price {
 			font-size: 50upx;
 			color: #303133;
 			margin-top: 12upx;
-			&:before{
+
+			&:before {
 				content: '￥';
 				font-size: 40upx;
 			}
@@ -153,8 +184,8 @@
 		margin-top: 20upx;
 		background-color: #fff;
 		padding-left: 60upx;
-		
-		.type-item{
+
+		.type-item {
 			height: 120upx;
 			padding: 20upx 0;
 			display: flex;
@@ -162,28 +193,33 @@
 			align-items: center;
 			padding-right: 60upx;
 			font-size: 30upx;
-			position:relative;
+			position: relative;
 		}
-		
-		.icon{
+
+		.icon {
 			width: 100upx;
 			font-size: 52upx;
 		}
+
 		.icon-erjiye-yucunkuan {
 			color: #fe8e2e;
 		}
+
 		.icon-weixinzhifu {
 			color: #36cb59;
 		}
+
 		.icon-alipay {
 			color: #01aaef;
 		}
-		.tit{
+
+		.tit {
 			font-size: $font-lg;
 			color: $font-color-dark;
 			margin-bottom: 4upx;
 		}
-		.con{
+
+		.con {
 			flex: 1;
 			display: flex;
 			flex-direction: column;
@@ -191,6 +227,7 @@
 			color: $font-color-light;
 		}
 	}
+
 	.mix-btn {
 		display: flex;
 		align-items: center;
@@ -204,5 +241,4 @@
 		border-radius: 10upx;
 		box-shadow: 1px 2px 5px rgba(219, 63, 96, 0.4);
 	}
-
 </style>
