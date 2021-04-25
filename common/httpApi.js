@@ -43,13 +43,15 @@ module.exports = {
 		makeOrder: "front/order/order", //下单
 		showOrder: "front/order/showOrder", //查看订单列表
 		showOrderDetail: "front/order/showOrderByOid", //查看订单详情
-		orderOperate: "front/order/orderOperate" //订单催单、申请退单动作
+		orderOperate: "front/order/orderOperate" ,//订单催单、申请退单动作
+		cancelOrder: "front/order/cancelOrder" //订单取消
 	},
 	my: {
 		account: "front/my/myInfo", //我的
 		waterBill: "front/my/showWaterBill",//我的流水
 		resetPwd: "front/my/resetPwd",//重置密码
 		phoneBind: "front/my/phoneBind",//绑定手机号码
+		myMembers: "front/my/myMembers",//用户列表
 	},
 	share: {
 		share: "front/share/sign" //分享

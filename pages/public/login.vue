@@ -29,7 +29,7 @@
 				<text @click="toRegist">去注册</text>
 			</view>
 		</view>
-		
+
 		<view class="login-footer">
 			<view class="footer-tip flex">其他登录方式</view>
 			<view class="footer-other flex">
@@ -38,41 +38,59 @@
 				</view>
 			</view>
 		</view>
-		
-		
+
+
 	</view>
 </template>
 
 <script>
-	import { mapMutations } from 'vuex';
+	import {
+		mapMutations
+	} from 'vuex';
 	import Wechat from '@/common/wechat/wechat';
 	import h5Copy from '@/js_sdk/junyi-h5-copy/junyi-h5-copy/junyi-h5-copy.js'
+	import {
+		mapState
+	} from 'vuex';
 
 	export default {
 		data() {
 			return {
 				mobile: '',
 				password: '',
-				logining: false
+				logining: false,
+				referrerId: ''
 			}
 		},
 		onLoad(options) {
+			if (this.hasLogin) {
+				uni.switchTab({
+					url: `/pages/user/user`
+				})
+				return;
+			}
 			let code = options.code;
-			if(code){
+			this.referrerId = options.referrerId;
+
+			if (code) {
 				var that = this;
 				this.$http.post(this.$httpApi.user.wxLogin, {
-					"code": code
+					"code": code,
+					"referrerId": that.referrerId
 				}).then(function(response) {
 					//这里只会在接口是成功状态返回
-					that.$api.msg("恭喜你！登录成功!");
+					that.$api.msg("登录成功!");
 					that.login(response);
 					uni.switchTab({
 						url: `/pages/user/user`
 					})
 				}).catch(function(error) {
-					console.log(error);
+					that.$api.msg("登录失败!");
 				});
 			}
+		},
+		computed: {
+			...mapState(['hasLogin', 'userinfo'])
 		},
 		methods: {
 			...mapMutations(['login']),
@@ -114,8 +132,8 @@
 			async wxLogin() {
 				// this.$api.msg("微信登陆暂时只对公测用户开开放，请联系客服");
 				// return;
-				let token = await Wechat.login();
-				
+				await Wechat.login(this.referrerId);
+
 			},
 			//点击客服微信号码
 			copyWx(wxNo) {
@@ -129,7 +147,7 @@
 					uni.showToast({
 						title: '客服微信号已复制,去微信搜索,添加客服好友吧!',
 						icon: 'none',
-						duration : 4000
+						duration: 4000
 					})
 				}
 			}
@@ -294,16 +312,16 @@
 			margin-left: 10upx;
 		}
 	}
-	
+
 	.login-footer {
 		padding: 0 70upx;
-	
+
 		.footer-tip {
 			align-items: center;
 			font-size: 24upx;
 			color: #999999;
 			text-align: center;
-	
+
 			&:before {
 				flex: 1;
 				content: '';
@@ -311,7 +329,7 @@
 				background: #D0D0D0;
 				margin-right: 30upx;
 			}
-	
+
 			&:after {
 				margin-left: 30upx;
 				flex: 1;
@@ -319,18 +337,18 @@
 				height: 2upx;
 				background: #D0D0D0;
 			}
-	
+
 		}
-	
+
 		.footer-other {
 			padding: 40upx 0 100upx 0;
 			justify-content: center;
-	
+
 			.other-list {
 				width: 80upx;
 				height: 80upx;
 				margin: 0 auto;
-	
+
 				image {
 					width: 100%;
 					height: 100%;

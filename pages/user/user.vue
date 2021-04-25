@@ -3,38 +3,37 @@
 
 		<view class="user-section">
 			<image class="bg" src="/static/group_detail_bg.png"></image>
-			<view class="user-info-box" @tap="navTo('/pages/public/login',1)">
+			<view class="user-info-box" @tap="navToLogin('/pages/public/login',1)">
 				<view class="portrait-box">
 					<image class="portrait" :src='!headImg?"/static/missing-face.png":headImg'></image>
 				</view>
 				<view class="info-box">
-					<text  class="username">{{accountName || '点击登录'}}</text>
+					<text class="username">{{accountName || '点击登录'}}</text>
 				</view>
 			</view>
 			<view class="vip-card-box">
 				<image class="card-bg" src="" mode=""></image>
 				<view class="tit">
 					<text class="yticon icon-iLinkapp-"></text>
-					云商乐购商城
+					熊猫集市
 				</view>
 				<text class="e-m"></text>
 				<text class="e-b"></text>
 			</view>
 		</view>
 
-<!-- @touchstart="coverTouchstart" @touchmove="coverTouchmove" @touchend="coverTouchend" -->
+		<!-- @touchstart="coverTouchstart" @touchmove="coverTouchmove" @touchend="coverTouchend" -->
 		<view class="cover-container" :style="[{
 				transform: coverTransform,
 				transition: coverTransition
-			}]"
-		 >
+			}]">
 			<image class="arc" src="/static/arc.png"></image>
 
 			<view class="notice-box tj-sction" v-if="hasLogin && (!isWxBind || isWxBind === 'N')">
 				<view class="notice-detail one-t" style="font-size: 15px;line-height: 25px;">为了账户安全，请绑定微信！</view>
 				<button class="bindPhone " style="margin-right: 5px; line-height: 25px;" @tap="bindWx()">去绑定</button>
 			</view>
-			
+
 			<view class="notice-box tj-sction" v-if="hasLogin && (!isPhoneBind || isPhoneBind === 'N')">
 				<view class="notice-detail one-t" style="font-size: 15px;line-height: 25px;">为了账户安全，请绑定手机！</view>
 				<button class="bindPhone " style="margin-right: 5px; line-height: 25px;" @tap="bindPhone()">去绑定</button>
@@ -96,20 +95,47 @@
 				<list-cell icon="icon-share" iconColor="#9789f7" title="联系客服" tips="商品咨询/系统注册" @eventClick="copyWx('sad535445345')"></list-cell>
 				<list-cell icon="icon-iconfontweixin" iconColor="#e07472" title="我的账单" tips="您的资金流水明细" @eventClick="navTo('/pages/money/waterBill')"></list-cell>
 				<list-cell icon="icon-dizhi" iconColor="#5fcda2" title="地址管理" tips="收货地址管理" @eventClick="navTo('/pages/address/address')"></list-cell>
-				<list-cell icon="icon-share" iconColor="#9789f7" title="分享" tips="邀请好友更多优惠" v-if="hasLogin"></list-cell>
+				<list-cell icon="icon-share" iconColor="#9789f7" title="分享" tips="邀请好友更多优惠" v-if="hasLogin" @eventClick="shareFc()"></list-cell>
 				<list-cell icon="icon-shezhi1" iconColor="#e07472" title="去登录" v-if="hasLogin == false" @eventClick="navTo('/pages/public/login',1)"></list-cell>
+				<list-cell icon="icon-shezhi1" iconColor="#e07472" title="我的团员" tips="查看所有团员" v-if="hasLogin == true" @eventClick="navTo('/pages/user/members/members',1)"></list-cell>
+				
 			</view>
 		</view>
 
+		<!-- 图片展示由自己实现 -->
+		<QSPopup ref="popup">
+			<view class="flex_column">
+				<view class="backgroundColor-white padding1vh border_radius_10px">
+					<image :src="posterImage || ''" mode="widthFix" class="posterImage"></image>
+				</view>
+				<view class="flex_row marginTop2vh">
+					<button type="primary"  @tap.prevent.stop="saveImage()">保存图片</button>
+					<button type="primary"  @tap.prevent.stop="share()">分享图片</button>
+				</view>
+			</view>
+		</QSPopup>
+		<!-- 画布 -->
+		<view class="hideCanvasView">
+			<canvas class="hideCanvas" id="default_PosterCanvasId" canvas-id="default_PosterCanvasId" :style="{width: (poster.width||10) + 'px', height: (poster.height||10) + 'px'}"></canvas>
+		</view>
 
 	</view>
+
+
+
 </template>
 <script>
 	import listCell from '@/components/mix-list-cell';
 	import commonJs from '@/common/common.js';
 	import wechat from '@/common/wechat/wechat';
 	import h5Copy from '@/js_sdk/junyi-h5-copy/junyi-h5-copy/junyi-h5-copy.js';
-	import { mapMutations } from 'vuex';
+	import {
+		mapMutations
+	} from 'vuex';
+	import {
+		getSharePoster
+	} from '@/js_sdk/QuShe-SharerPoster/QS-SharePoster/QS-SharePoster.js'; //路径自己调整
+	import _app from '@/js_sdk/QuShe-SharerPoster/QS-SharePoster/app.js';
 
 	import {
 		mapState
@@ -126,28 +152,23 @@
 				coverTransform: 'translateY(0px)',
 				coverTransition: '0s',
 				moving: false,
-				accountName: '',
+				accountName: '请登录',
 				accountRemain: 0,
 				isWxBind: 'N',
 				isPhoneBind: 'N',
-				headImg: ''
+				headImg: '',
+				refferUrl:'https://www.ricebuy.cn/v1/pages/public/login?referrerId=',
+
+				//---- 以下是分享内容 
+				poster: {},
+				posterImage: '',
+				canvasId: 'default_PosterCanvasId',
+				count: 0
+				// --- 以上是分享内容
 			}
 		},
 		onLoad(options) {
-			let code = options.code;
-			if (code) {
-				var that = this;
-				this.$http.post(this.$httpApi.user.wxLogin, {
-					"code": code
-				}).then(function(response) {
-					//这里只会在接口是成功状态返回
-					that.$api.msg("登录成功!");
-					that.login(response);
-					that.loanUserInfo();
-				}).catch(function(error) {
-					console.log(error);
-				});
-			}
+			this.val = options.devicenumber;
 		},
 		onShow() {
 			if (this.hasLogin) {
@@ -176,9 +197,8 @@
 				})
 			}
 		},
-		// #endif
 		computed: {
-			...mapState(['hasLogin', 'userInfo'])
+			...mapState(['hasLogin', 'userinfo'])
 		},
 		methods: {
 			...mapMutations(['login']),
@@ -195,8 +215,15 @@
 				}).catch(function(error) {
 					//这里只会在接口是失败状态返回，不需要去处理错误提示
 				});
+				that.refferUrl = that.refferUrl + that.userinfo.userId;
 			},
-
+			navToLogin(url, type){
+				if(this.hasLogin){
+					return;
+				}
+				this.navTo(url,type);
+			},
+			
 			/**
 			 * 统一跳转接口,拦截未登录路由
 			 * navigator标签现在默认没有转场动画，所以用view
@@ -269,11 +296,11 @@
 					uni.showToast({
 						title: '客服微信号已复制,去微信搜索,添加客服好友吧!',
 						icon: 'none',
-						duration : 4000
+						duration: 4000
 					})
 				}
 			},
-			bindPhone(){
+			bindPhone() {
 				if (!this.hasLogin) {
 					commonJs.showUnloginModal()
 					return
@@ -281,6 +308,194 @@
 				uni.navigateTo({
 					url: `/pages/user/phoneBind`
 				})
+			},
+
+			// 以下为分享内容
+			async shareFc() {
+				let _this = this;
+				try {
+					this.count++;
+					const d = await getSharePoster({
+						_this: _this, //若在组件中使用 必传
+						canvasType: '2d',
+						type: 'testShareType',
+						formData: {
+							//访问接口获取背景图携带自定义数据
+
+						},
+						posterCanvasId: _this.canvasId, //canvasId
+						delayTimeScale: 20, //延时系数
+						background: {
+							height: 10,
+							width: 10
+						},
+						setCanvasWH({
+							bgObj
+						}) {
+							_this.poster = bgObj
+						},
+						drawArray({
+							bgObj,
+							type,
+							bgScale,
+							setBgObj,
+							getBgObj
+						}) {
+							return [{
+									type: 'image',
+									id: 'productImage',
+									url: 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fpic3.zhimg.com%2Fv2-a678ceb86ea5b80fd57cc7fd3ec80b73_1200x500.jpg&refer=http%3A%2F%2Fpic3.zhimg.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1621837008&t=160e686dee4be52752f2a64f555c4556',
+									dx: 0,
+									dy: 0,
+									serialNum: 0,
+									infoCallBack(imageInfo) {
+										let width;
+										let height;
+										if (imageInfo.width > imageInfo.height) {
+											width = imageInfo.width > 700 ? 700 : imageInfo.width;
+											height = width / imageInfo.width * imageInfo.height;
+										} else {
+											height = imageInfo.height > 700 ? 700 : imageInfo.height;
+											width = height / imageInfo.height * imageInfo.width;
+										}
+										if (width < 500) {
+											width = 500;
+											height = width / imageInfo.width * imageInfo.height;
+										}
+										let addHeight = height * .3;
+										if (addHeight < 150) addHeight = 150;
+										if (addHeight > 250) addHeight = 250;
+										setBgObj({
+											width,
+											height: height + addHeight
+										});
+										return {
+											dWidth: width,
+											dHeight: height
+										}
+									}
+								},
+								{
+									type: 'text',
+									id: 'productName',
+									text: '我是'+_this.accountName,
+									color: '#f1505c',
+									serialNum: 1,
+									allInfoCallback({
+										drawArray
+									}) {
+										const productImage = drawArray.find(item => item.id === 'productImage')
+										const addHeight = getBgObj().height - productImage.dHeight;
+										return {
+											size: getBgObj().width * 0.05,
+											lineFeed: {
+												maxWidth: getBgObj().width * 0.5,
+												lineNum: 1
+											},
+											dx: getBgObj().width * .05,
+											dy: productImage.dHeight + addHeight * .25,
+										}
+									}
+								},
+								{
+									type: 'text',
+									text: '我在熊猫集市淘好物',
+									color: '#f1505c',
+									serialNum: 2,
+									allInfoCallback({
+										drawArray
+									}) {
+										const productImage = drawArray.find(item => item.id === 'productImage')
+										const addHeight = getBgObj().height - productImage.dHeight;
+										return {
+											size: getBgObj().width * 0.05,
+											lineFeed: {
+												maxWidth: getBgObj().width * 0.5,
+												lineNum: 1
+											},
+											dx: getBgObj().width * .05,
+											dy: productImage.dHeight + addHeight * .5,
+										}
+									}
+								},
+								{
+									type: 'text',
+									text: '快来一起省钱吧',
+									serialNum: 3,
+									color: '#f1505c',
+									id: 'text1',
+									allInfoCallback({
+										drawArray
+									}) {
+										const productImage = drawArray.find(item => item.id === 'productImage')
+										const addHeight = getBgObj().height - productImage.dHeight;
+										return {
+											size: getBgObj().width * 0.05,
+											lineFeed: {
+												maxWidth: getBgObj().width * 0.5,
+												lineNum: 1
+											},
+											dx: getBgObj().width * .05,
+											dy: productImage.dHeight + addHeight * .75,
+										}
+									}
+								},
+								
+								{
+									type: 'qrcode',
+									text: _this.refferUrl,
+									serialNum: 5,
+									allInfoCallback({
+										drawArray
+									}) {
+										const productImage = drawArray.find(item => item.id === 'productImage')
+										const addHeight = getBgObj().height - productImage.dHeight;
+										const widthSize = getBgObj().width * .4;
+										const heightSize = addHeight;
+										const countSize = widthSize > heightSize ? heightSize : widthSize;
+										const size = countSize * .9;
+										return {
+											size: size,
+											dx: getBgObj().width - countSize * .95,
+											dy: getBgObj().height - countSize * .95
+										}
+									}
+								}
+							]
+						}
+					})
+					this.posterImage = d.poster.tempFilePath;
+					this.$refs.popup.show();
+				} catch (e) {
+					_app.hideLoading();
+					_app.showToast(JSON.stringify(e));
+					console.log(JSON.stringify(e));
+				}
+			},
+			saveImage() {
+				// #ifndef H5
+				uni.saveImageToPhotosAlbum({
+					filePath: this.posterImage,
+					success(res) {
+						_app.showToast('保存成功，快去分享吧');
+					},
+					fail (res){
+						_app.showToast(res);
+					}
+				})
+				
+			},
+			share() {
+				// #ifndef H5
+				uni.saveImageToPhotosAlbum({
+					filePath: this.poster.finalPath,
+					success(res) {
+						_app.showToast('海报保存成功，快去分享吧');
+					}
+				})
+			},
+			hideQr() {
+				this.$refs.popup.hide()
 			}
 		}
 	}
@@ -322,7 +537,7 @@
 		display: flex;
 		align-items: center;
 		position: relative;
-		z-index: 1;
+		/* z-index: 100; */
 
 		.portrait {
 			width: 130upx;
@@ -509,5 +724,80 @@
 			font-weight: 500;
 			color: rgba(255, 255, 255, 1);
 		}
+	}
+
+	/* 以下内容为分享 */
+	.hideCanvasView {
+		position: relative;
+	}
+
+	.hideCanvas {
+		position: fixed;
+		top: -99999upx;
+		left: -99999upx;
+		z-index: -99999;
+	}
+
+	.flex_row_c_c {
+		display: flex;
+		flex-direction: row;
+		justify-content: center;
+		align-items: center;
+	}
+
+	.modalView {
+		width: 100%;
+		height: 100%;
+		position: fixed;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		opacity: 0;
+		outline: 0;
+		transform: scale(1.2);
+		perspective: 2500upx;
+		background: rgba(0, 0, 0, 0.6);
+		transition: all .3s ease-in-out;
+		pointer-events: none;
+		backface-visibility: hidden;
+		z-index: 999;
+	}
+
+	.modalView.show {
+		opacity: 2;
+		transform: scale(1);
+		pointer-events: auto;
+		z-index: 9999;
+	}
+
+	.flex_column {
+		display: flex;
+		flex-direction: column;
+	}
+
+	.backgroundColor-white {
+		background-color: white;
+	}
+
+	.border_radius_10px {
+		border-radius: 10px;
+	}
+
+	.padding1vh {
+		padding: 1vh;
+	}
+
+	.posterImage {
+		width: 580rpx;
+	}
+
+	.flex_row {
+		display: flex;
+		flex-direction: row;
+	}
+
+	.marginTop2vh {
+		margin-top: 2vh;
 	}
 </style>

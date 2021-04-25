@@ -65,8 +65,8 @@
 			<view class="c-row b-b">
 				<text class="tit">时效</text>
 				<view class="bz-list con">
-					<text style="margin-right: 5px;">{{deliveryFrom}} ·</text>
-					<text>{{deliveryTime}}</text>
+					<text style="margin-right: 5px;">{{deliveryFrom}}发货 ·</text>
+					<text>{{deliveryTime}}小时内</text>
 				</view>
 			</view>
 		</view>

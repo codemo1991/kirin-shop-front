@@ -113,7 +113,7 @@ $http.dataFactory = function(res) {
 						loginPopupNum--;
 						if (res2.confirm) {
 							uni.navigateTo({
-								url: "'/pages/login"
+								url: "/pages/login"
 							});
 						}
 					}
@@ -121,8 +121,20 @@ $http.dataFactory = function(res) {
 			}
 			// 返回错误的结果(catch接受数据)
 			res.reject(res.response);
-		} else if (httpData.code == "3") {
-			
+		} else if (httpData.code == "3001") {
+			uni.showModal({
+				title: '温馨提示',
+				content: '您还没有添加收货地址',
+				confirmText: "去添加",
+				cancelText: "取消",
+				success: res2 => {
+					if (res2.confirm) {
+						uni.navigateTo({
+							url: "/pages/address/address?source=1"
+						});
+					}
+				}
+			});
 		}
 		
 		else { //其他错误提示

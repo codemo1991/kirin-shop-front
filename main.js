@@ -7,6 +7,9 @@ import httpApi from './common/httpApi'
 import HttpCache from './common/cache'
 import orangeUtil from 'js_sdk/orange-util/orange-util.js'; //orange-util.js 所在文件目录
 Vue.use(orangeUtil);
+import QSPopup from '@/components/QS-popup/QS-popup.vue'
+Vue.component('QSPopup', QSPopup)
+
 
 // 注册全局组件
 import MescrollBody from "@/components/mescroll-uni/mescroll-body.vue"

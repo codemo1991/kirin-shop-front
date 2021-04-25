@@ -6,7 +6,7 @@
 			"style": {
 				// #ifdef MP 
 				"navigationBarTitleText": "云商乐购",
-				//"navigationStyle": "custom",
+				"navigationStyle": "custom",
 				// #endif 
 				"app-plus": {
 					"titleNView": {
@@ -96,7 +96,7 @@
 		},{
 			"path": "pages/user/phoneBind",
 			"style": {
-				"navigationBarTitleText": "",
+				"navigationBarTitleText": "编辑地址",
 				"navigationStyle": "custom",
 				"app-plus": {
 					"titleNView": false,
@@ -172,7 +172,7 @@
 		}, {
 			"path": "pages/address/addressManage",
 			"style": {
-				"navigationBarTitleText": ""
+				"navigationBarTitleText": "地址管理"
 			}
 		}, {
 			"path": "pages/money/pay",
@@ -226,10 +226,20 @@
 				"navigationBarTitleText": "商品列表"
 			}
         }
+        ,{
+            "path" : "pages/user/members/members",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "我的团员",
+                "enablePullDownRefresh": false
+            }
+            
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
-		"navigationBarTitleText": "妈妈医选",
+		"navigationBarTitleText": "好礼知时节",
+		// "navigationStyle":"custom",
 		"navigationBarBackgroundColor": "#FFFFFF",
 		"backgroundColor": "#f8f8f8"
 	},
