@@ -109,8 +109,7 @@
 					<image :src="posterImage || ''" mode="widthFix" class="posterImage"></image>
 				</view>
 				<view class="flex_row marginTop2vh">
-					<button type="primary"  @tap.prevent.stop="saveImage()">保存图片</button>
-					<button type="primary"  @tap.prevent.stop="share()">分享图片</button>
+					<button type="primary"  @tap.prevent.stop="saveImage()">长按图片保存分享</button>
 				</view>
 			</view>
 		</QSPopup>
@@ -473,27 +472,9 @@
 				}
 			},
 			saveImage() {
-				// #ifndef H5
-				uni.saveImageToPhotosAlbum({
-					filePath: this.posterImage,
-					success(res) {
-						_app.showToast('保存成功，快去分享吧');
-					},
-					fail (res){
-						_app.showToast(res);
-					}
-				})
-				
+				_app.showToast('请长按图片保存分享');
 			},
-			share() {
-				// #ifndef H5
-				uni.saveImageToPhotosAlbum({
-					filePath: this.poster.finalPath,
-					success(res) {
-						_app.showToast('海报保存成功，快去分享吧');
-					}
-				})
-			},
+			
 			hideQr() {
 				this.$refs.popup.hide()
 			}

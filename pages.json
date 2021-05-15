@@ -239,7 +239,7 @@
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "好礼知时节",
-		// "navigationStyle":"custom",
+		"navigationStyle":"custom",
 		"navigationBarBackgroundColor": "#FFFFFF",
 		"backgroundColor": "#f8f8f8"
 	},
