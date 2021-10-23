@@ -12,7 +12,7 @@
 			<!-- 标题栏和状态栏占位符 -->
 			<view class="titleNview-placing"></view>
 			<!-- 背景色区域 -->
-			<view class="titleNview-background" style="backgroundColor:rgb(183, 73, 69)"></view>
+			<view class="titleNview-background" style="backgroundColor:rgb(81, 163, 244)"></view>
 			<swiper class="carousel" circular @change="swiperChange">
 				<swiper-item v-for="(item, index) in carouselList" :key="index" class="carousel-item" @click="navTo(item.url)">
 					<image :src="item.imgUrl" />
@@ -239,19 +239,19 @@
 				menuList: [],
 				list: [
 					{
-						title: '踮起脚尖走向阳光 刚刚浏览分享了纸尿裤',
+						title: '踮起脚尖走向阳光 刚刚浏览分享了特惠套装',
 						img: 'https://wx.qlogo.cn/mmopen/vi_32/DYAIOgq83er0aq5WuQhWxXcQoQbSnSPywUheQrot5biaFxV47nF2OB0aegkH12q2A6VkGUBDfUVqiaqgzVCJJicDg/132'
 					},
 					{
-						title: '幸福的小女人  刚刚浏览了婴乐霜',
+						title: '幸福的小女人  刚刚浏览了丸子',
 						img: 'https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTIOeUhleCNwcOoTtk9Y1zwmpw76FsmAr1bYcKia2AVPiapbtl34jac7SQgjMaibKDJCqjYaHwvmUh3IQ/132'
 					},
 					{
-						title: '快乐天使  购买了婴乐霜',
+						title: '快乐天使  购买了冷敷贴',
 						img: 'https://wx.qlogo.cn/mmopen/vi_32/OaXz0rjMsrHkZlfxeEqRhhUCKyaXyVSbCQZWFUeZQuUetKhbQRZiclqNQhFfv3yiclOzTl1FgZdjDpwAFG5gDhBg/132'
 					},
 					{
-						title: '握不住的沙  刚刚浏览了超赞',
+						title: '握不住的沙  刚刚浏览了鸡趴',
 						img: 'https://wx.qlogo.cn/mmopen/vi_32/bVfMeCPxSQsfBRc1XFHiaAiaZvvdrXC9hMTWAHoqDZKk7HD2By7km1dc55eSEibibKwDaW3ZQ2Zcbccr4KzwILVquQ/132'
 					},
 					{

@@ -4,6 +4,7 @@
 			<view class="item">
 				<image :src="scope.data.img" mode="aspectFill" class="item-img"></image>
 				<text style="margin-left: 20px;">{{scope.data.text}}</text>
+				<text style="margin-left: 20px;">{{scope.data.text}}</text>
 			</view>
 		</template>
 	</option-list>
